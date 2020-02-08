@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.divudi</groupId>
-    <artifactId>ph</artifactId>
+    <artifactId>rt</artifactId>
     <version>0.1</version>
     <packaging>war</packaging>
 
-    <name>ph</name>
+    <name>rt</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -255,7 +255,7 @@
             <url>file:${project.basedir}/lib</url>
         </repository>
         <repository>
-            <url>http://download.eclipse.org/rt/eclipselink/maven.repo/</url>
+            <url>https://download.eclipse.org/rt/eclipselink/maven.repo/</url>
             <id>eclipselink</id>
             <layout>default</layout>
             <name>Repository for library EclipseLink (JPA 2.1)</name>
