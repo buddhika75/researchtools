@@ -1,6 +1,6 @@
 package lk.gov.health.phsp.bean;
 
-import lk.gov.health.phsp.entity.Area;
+
 import lk.gov.health.phsp.entity.WebUser;
 import lk.gov.health.phsp.entity.Institution;
 import lk.gov.health.phsp.enums.InstitutionType;
@@ -8,8 +8,6 @@ import lk.gov.health.phsp.entity.Item;
 import lk.gov.health.phsp.entity.Upload;
 import lk.gov.health.phsp.enums.WebUserRole;
 import lk.gov.health.phsp.facade.InstitutionFacade;
-import lk.gov.health.phsp.facade.ProjectInstitutionFacade;
-import lk.gov.health.phsp.facade.ProjectSourceOfFundFacade;
 import lk.gov.health.phsp.facade.UploadFacade;
 import lk.gov.health.phsp.facade.WebUserFacade;
 import lk.gov.health.phsp.facade.util.JsfUtil;
@@ -61,27 +59,19 @@ public class WebUserController implements Serializable {
     private InstitutionFacade institutionFacade;
     @EJB
     private UploadFacade uploadFacade;
-    @EJB
-    private ProjectInstitutionFacade projectInstitutionFacade;
-    @EJB
-    private ProjectSourceOfFundFacade projectSourceOfFundFacade;
-    @EJB
+      @EJB
     private UserPrivilegeFacade userPrivilegeFacade;
     /*
     Controllers
      */
     @Inject
     private CommonController commonController;
-    @Inject
-    private AreaController areaController;
+ 
     @Inject
     private InstitutionController institutionController;
     @Inject
     private ItemController itemController;
-    @Inject
-    private ClientController clientController;
-    @Inject
-    private EncounterController encounterController;
+   
 
     /*
     Variables
@@ -93,23 +83,13 @@ public class WebUserController implements Serializable {
 
     private List<Institution> loggableInstitutions;
     private List<Institution> loggablePmcis;
-    private List<Area> loggableGnAreas;
-
-    private Area selectedProvince;
-    private Area selectedDistrict;
-    private Area selectedDsArea;
-    private Area selectedGnArea;
+   
     private Institution selectedLocation;
     private Item selectedSourceOfFund;
     private Double selectedFundValue;
     private Item selectedFundUnit;
     private String selectedFundComments;
 
-    private List<Area> districtsAvailableForSelection;
-
-    private List<Area> selectedDsAreas;
-    private List<Area> selectedGnAreas;
-    private Area[] selectedProvinces;
 
     private WebUser current;
     private Upload currentUpload;
@@ -131,8 +111,7 @@ public class WebUserController implements Serializable {
     private Date toDate;
 
     private Integer year;
-    private Area province;
-    private Area district;
+
     private Institution location;
     private Boolean allIslandProjects;
     private String searchKeyword;
@@ -147,7 +126,7 @@ public class WebUserController implements Serializable {
 
     private WebUserRole assumedRole;
     private Institution assumedInstitution;
-    private Area assumedArea;
+
     private List<UserPrivilege> assumedPrivileges;
 
     /**
@@ -170,7 +149,7 @@ public class WebUserController implements Serializable {
             JsfUtil.addErrorMessage("Please select a User");
             return "";
         }
-        assumedArea = current.getArea();
+      
         assumedInstitution = current.getInstitution();
         assumedRole = current.getWebUserRole();
         assumedPrivileges = userPrivilegeList(current);
@@ -199,41 +178,25 @@ public class WebUserController implements Serializable {
         logOut();
         userName = twu.getName();
         loggedUser = twu;
-        loggedUser.setAssumedArea(assumedArea);
+
         loggedUser.setAssumedInstitution(assumedInstitution);
         loggedUser.setAssumedRole(assumedRole);
         loggedUserPrivileges = assumedPrivileges;
         return login(true);
     }
 
-    public void assumedInstitutionChanged() {
-        if (assumedInstitution != null) {
-            assumedArea = assumedInstitution.getDistrict();
-        }
-    }
+   
 
     public String endAssumingRoles() {
         assumedRole = null;
         assumedInstitution = null;
-        assumedArea = null;
+
         assumedPrivileges = null;
         logOut();
         return login(true);
     }
 
-    public List<Area> findAutherizedGnAreas() {
-        List<Area> gns = new ArrayList<>();
-        if (loggedUser == null) {
-            return gns;
-        }
-        if (getLoggablePmcis() == null) {
-            return gns;
-        }
-        for (Institution i : getLoggablePmcis()) {
-            gns.addAll(institutionController.findDrainingGnAreas(i));
-        }
-        return gns;
-    }
+   
 
     public List<Institution> findAutherizedInstitutions() {
         List<Institution> ins = new ArrayList<>();
@@ -392,8 +355,7 @@ public class WebUserController implements Serializable {
         if (current == null) {
             return;
         }
-        LatLng coord1 = new LatLng(current.getInstitution().getCoordinate().getLatitude(), current.getInstitution().getCoordinate().getLongitude());
-        emptyModel.addOverlay(new Marker(coord1, current.getInstitution().getAddress()));
+      
     }
 
     public void markLocationOnMapForBidders() {
@@ -401,8 +363,7 @@ public class WebUserController implements Serializable {
         if (current == null) {
             return;
         }
-        LatLng coord1 = new LatLng(current.getInstitution().getCoordinate().getLatitude(), current.getInstitution().getCoordinate().getLongitude());
-        emptyModel.addOverlay(new Marker(coord1, current.getInstitution().getAddress()));
+       
     }
 
     public String viewMedia() {
@@ -442,8 +403,7 @@ public class WebUserController implements Serializable {
     }
 
     public String addMarker() {
-        Marker marker = new Marker(new LatLng(current.getInstitution().getCoordinate().getLatitude(), current.getInstitution().getCoordinate().getLongitude()), current.getName());
-        emptyModel.addOverlay(marker);
+    
         getInstitutionFacade().edit(getCurrent().getInstitution());
         JsfUtil.addSuccessMessage("Location Recorded");
         return "";
@@ -491,7 +451,6 @@ public class WebUserController implements Serializable {
     public String login(boolean withoutPassword) {
         loggableInstitutions = null;
         loggablePmcis = null;
-        loggableGnAreas = null;
         institutionController.setMyClinics(null);
         if (userName == null || userName.trim().equals("")) {
             JsfUtil.addErrorMessage("Please enter a Username");
@@ -539,21 +498,15 @@ public class WebUserController implements Serializable {
     }
 
     public void prepareInsAdminDashboard() {
-        totalNumberOfRegisteredClients = clientController.countOfRegistedClients(loggedUser.getInstitution(), null);
-        totalNumberOfClinicEnrolments = encounterController.countOfEncounters(getInstitutionController().getMyClinics(), EncounterType.Clinic_Enroll);
-        totalNumberOfClinicVisits = encounterController.countOfEncounters(getInstitutionController().getMyClinics(), EncounterType.Clinic_Visit);
+        
     }
 
     public void prepareDocDashboard() {
-        totalNumberOfRegisteredClients = clientController.countOfRegistedClients(loggedUser.getInstitution().getPoiInstitution(), null);
-        totalNumberOfClinicEnrolments = encounterController.countOfEncounters(getInstitutionController().getMyClinics(), EncounterType.Clinic_Enroll);
-        totalNumberOfClinicVisits = encounterController.countOfEncounters(getInstitutionController().getMyClinics(), EncounterType.Clinic_Visit);
+    
     }
 
     public void prepareNurseDashboard() {
-        totalNumberOfRegisteredClients = clientController.countOfRegistedClients(loggedUser.getInstitution().getPoiInstitution(), null);
-        totalNumberOfClinicEnrolments = encounterController.countOfEncounters(getInstitutionController().getMyClinics(), EncounterType.Clinic_Enroll);
-        totalNumberOfClinicVisits = encounterController.countOfEncounters(getInstitutionController().getMyClinics(), EncounterType.Clinic_Visit);
+    
     }
 
     public String loginForMobile() {
@@ -1322,28 +1275,8 @@ public class WebUserController implements Serializable {
         this.institution = institution;
     }
 
-    public Area[] getSelectedProvinces() {
-        return selectedProvinces;
-    }
+   
 
-    public void setSelectedProvinces(Area[] selectedProvinces) {
-        this.selectedProvinces = selectedProvinces;
-    }
-
-    public void setSelectedDsAreas(List<Area> selectedDsAreas) {
-        this.selectedDsAreas = selectedDsAreas;
-    }
-
-    public List<Area> getSelectedGnAreas() {
-        return selectedGnAreas;
-    }
-
-    public void setSelectedGnAreas(List<Area> selectedGnAreas) {
-        if (selectedGnAreas == null) {
-            selectedGnAreas = new ArrayList<>();
-        }
-        this.selectedGnAreas = selectedGnAreas;
-    }
 
     public Integer getYear() {
         return year;
@@ -1353,21 +1286,8 @@ public class WebUserController implements Serializable {
         this.year = year;
     }
 
-    public Area getProvince() {
-        return province;
-    }
+   
 
-    public void setProvince(Area province) {
-        this.province = province;
-    }
-
-    public Area getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(Area district) {
-        this.district = district;
-    }
 
     public Institution getLocation() {
         return location;
@@ -1415,9 +1335,7 @@ public class WebUserController implements Serializable {
         this.locale = locale;
     }
 
-    public AreaController getAreaController() {
-        return areaController;
-    }
+  
 
     public InstitutionController getInstitutionController() {
         return institutionController;
@@ -1435,37 +1353,8 @@ public class WebUserController implements Serializable {
         this.passwordReenter = passwordReenter;
     }
 
-    public Area getSelectedProvince() {
-        return selectedProvince;
-    }
+   
 
-    public void setSelectedProvince(Area selectedProvince) {
-        this.selectedProvince = selectedProvince;
-    }
-
-    public Area getSelectedDistrict() {
-        return selectedDistrict;
-    }
-
-    public void setSelectedDistrict(Area selectedDistrict) {
-        this.selectedDistrict = selectedDistrict;
-    }
-
-    public Area getSelectedDsArea() {
-        return selectedDsArea;
-    }
-
-    public void setSelectedDsArea(Area selectedDsArea) {
-        this.selectedDsArea = selectedDsArea;
-    }
-
-    public Area getSelectedGnArea() {
-        return selectedGnArea;
-    }
-
-    public void setSelectedGnArea(Area selectedGnArea) {
-        this.selectedGnArea = selectedGnArea;
-    }
 
     public Institution getSelectedLocation() {
         return selectedLocation;
@@ -1507,13 +1396,7 @@ public class WebUserController implements Serializable {
         this.selectedFundComments = selectedFundComments;
     }
 
-    public ProjectSourceOfFundFacade getProjectSourceOfFundFacade() {
-        return projectSourceOfFundFacade;
-    }
-
-    public ProjectInstitutionFacade getProjectInstitutionFacade() {
-        return projectInstitutionFacade;
-    }
+   
 
     public TreeNode getAllPrivilegeRoot() {
         return allPrivilegeRoot;
@@ -1559,13 +1442,7 @@ public class WebUserController implements Serializable {
         this.companyUploads = companyUploads;
     }
 
-    public List<Area> getDistrictsAvailableForSelection() {
-        return districtsAvailableForSelection;
-    }
-
-    public void setDistrictsAvailableForSelection(List<Area> districtsAvailableForSelection) {
-        this.districtsAvailableForSelection = districtsAvailableForSelection;
-    }
+   
 
     public List<UserPrivilege> getLoggedUserPrivileges() {
         return loggedUserPrivileges;
@@ -1605,16 +1482,8 @@ public class WebUserController implements Serializable {
         this.loggablePmcis = loggablePmcis;
     }
 
-    public List<Area> getLoggableGnAreas() {
-        if (loggableGnAreas == null) {
-            loggableGnAreas = findAutherizedGnAreas();
-        }
-        return loggableGnAreas;
-    }
+    
 
-    public void setLoggableGnAreas(List<Area> loggableGnAreas) {
-        this.loggableGnAreas = loggableGnAreas;
-    }
 
     public Long getTotalNumberOfClinicVisits() {
         return totalNumberOfClinicVisits;
@@ -1624,13 +1493,7 @@ public class WebUserController implements Serializable {
         this.totalNumberOfClinicVisits = totalNumberOfClinicVisits;
     }
 
-    public ClientController getClientController() {
-        return clientController;
-    }
-
-    public EncounterController getEncounterController() {
-        return encounterController;
-    }
+   
 
     public Long getTotalNumberOfClinicEnrolments() {
         return totalNumberOfClinicEnrolments;
@@ -1656,13 +1519,7 @@ public class WebUserController implements Serializable {
         this.assumedInstitution = assumedInstitution;
     }
 
-    public Area getAssumedArea() {
-        return assumedArea;
-    }
-
-    public void setAssumedArea(Area assumedArea) {
-        this.assumedArea = assumedArea;
-    }
+   
 
     public List<UserPrivilege> getAssumedPrivileges() {
         return assumedPrivileges;

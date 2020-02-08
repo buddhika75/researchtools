@@ -94,18 +94,7 @@ public class Person implements Serializable {
     private String website;
     private String drivingLicenseNumber;
 
-    @ManyToOne
-    private Area gnArea;
-    @ManyToOne
-    private Area dsArea;
-    @ManyToOne
-    private Area phmArea;
-    @ManyToOne
-    private Area mohArea;
-    @ManyToOne
-    private Area district;
-    @ManyToOne
-    private Area province;
+   
 
     //Created Properties
     @ManyToOne
@@ -220,89 +209,7 @@ public class Person implements Serializable {
 // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="Getters & Setters">
 
-    /**
-     * @return the gnArea
-     */
-    public Area getGnArea() {
-        return gnArea;
-    }
-
-    /**
-     * @param gnArea the gnArea to set
-     */
-    public void setGnArea(Area gnArea) {
-        this.gnArea = gnArea;
-    }
-
-    /**
-     * @return the dsArea
-     */
-    public Area getDsArea() {
-        return dsArea;
-    }
-
-    /**
-     * @param dsArea the dsArea to set
-     */
-    public void setDsArea(Area dsArea) {
-        this.dsArea = dsArea;
-    }
-
-    /**
-     * @return the phmArea
-     */
-    public Area getPhmArea() {
-        return phmArea;
-    }
-
-    /**
-     * @param phmArea the phmArea to set
-     */
-    public void setPhmArea(Area phmArea) {
-        this.phmArea = phmArea;
-    }
-
-    /**
-     * @return the mohArea
-     */
-    public Area getMohArea() {
-        return mohArea;
-    }
-
-    /**
-     * @param mohArea the mohArea to set
-     */
-    public void setMohArea(Area mohArea) {
-        this.mohArea = mohArea;
-    }
-
-    /**
-     * @return the district
-     */
-    public Area getDistrict() {
-        return district;
-    }
-
-    /**
-     * @param district the district to set
-     */
-    public void setDistrict(Area district) {
-        this.district = district;
-    }
-
-    /**
-     * @return the province
-     */
-    public Area getProvince() {
-        return province;
-    }
-
-    /**
-     * @param province the province to set
-     */
-    public void setProvince(Area province) {
-        this.province = province;
-    }
+   
 
     /**
      * @param ageMonths the ageMonths to set

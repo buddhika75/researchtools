@@ -30,7 +30,6 @@ import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
-import lk.gov.health.phsp.entity.DesignComponentFormSet;
 import lk.gov.health.phsp.entity.Item;
 import lk.gov.health.phsp.enums.ItemType;
 import org.primefaces.model.UploadedFile;
@@ -71,17 +70,7 @@ public class ItemController implements Serializable {
     // <editor-fold defaultstate="collapsed" desc="Navigation">
     // </editor-fold>    
     // <editor-fold defaultstate="collapsed" desc="Functions">
-    public void fillDuplicateItemsInAFormSet(DesignComponentFormSet s) {
-        String j = "select di.item from DesignComponentFormItem di "
-                + "  where di.retired=false "
-                + "  and di.parentComponent.parentComponent=:s "
-                + "  group by di.item "
-                + " having count(*)>1 "
-                + "  ";
-        Map m = new HashMap();
-        m.put("s", s);
-        items = getFacade().findByJpql(j, m);
-    }
+   
 
     public void makeAsSelectedParent(Item pi) {
         selectedParent = pi;

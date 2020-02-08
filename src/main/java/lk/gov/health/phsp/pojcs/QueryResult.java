@@ -27,10 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import lk.gov.health.phsp.entity.Area;
-import lk.gov.health.phsp.entity.Client;
-import lk.gov.health.phsp.entity.ClientEncounterComponentForm;
-import lk.gov.health.phsp.entity.Encounter;
+
 import lk.gov.health.phsp.entity.Relationship;
 import lk.gov.health.phsp.enums.QueryFilterAreaType;
 import lk.gov.health.phsp.enums.QueryFilterPeriodType;
@@ -41,7 +38,7 @@ import lk.gov.health.phsp.enums.QueryFilterPeriodType;
  */
 public class QueryResult {
 
-    private Area area;
+
     private Jpq jpq;
 
     private Date tfrom = null;
@@ -56,9 +53,7 @@ public class QueryResult {
     private Long longResult;
     private Double dblResult;
     private List<Relationship> resultRelationshipList;
-    private List<Client> resultClientList;
-    private List<Encounter> resultEncounterList;
-    private List<ClientEncounterComponentForm> resultFormList;
+   
 
     private String chartNameSeries;
     private String chartDataSeries1;
@@ -69,13 +64,7 @@ public class QueryResult {
 
     private String chartString;
 
-    public Area getArea() {
-        return area;
-    }
-
-    public void setArea(Area area) {
-        this.area = area;
-    }
+   
 
     public Jpq getJpq() {
         return jpq;
@@ -101,29 +90,7 @@ public class QueryResult {
         this.resultRelationshipList = resultRelationshipList;
     }
 
-    public List<Client> getResultClientList() {
-        return resultClientList;
-    }
-
-    public void setResultClientList(List<Client> resultClientList) {
-        this.resultClientList = resultClientList;
-    }
-
-    public List<Encounter> getResultEncounterList() {
-        return resultEncounterList;
-    }
-
-    public void setResultEncounterList(List<Encounter> resultEncounterList) {
-        this.resultEncounterList = resultEncounterList;
-    }
-
-    public List<ClientEncounterComponentForm> getResultFormList() {
-        return resultFormList;
-    }
-
-    public void setResultFormList(List<ClientEncounterComponentForm> resultFormList) {
-        this.resultFormList = resultFormList;
-    }
+   
 
     public Date getTfrom() {
         return tfrom;

@@ -69,28 +69,7 @@ public class Institution implements Serializable {
 
     @ManyToOne
     private Institution parent;
-    @ManyToOne
-    private Area gnArea;
-    @ManyToOne
-    private Area phmArea;
-    @ManyToOne
-    private Area phiArea;
-    @ManyToOne
-    private Area dsDivision;
-    @ManyToOne
-    private Area mohArea;
-    @ManyToOne
-    private Area district;
-    @ManyToOne
-    private Area rdhsArea;
-    @ManyToOne
-    private Area province;
-    @ManyToOne
-    private Area pdhsArea;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private Coordinate coordinate;
-
+   
     @ManyToOne
     private WebUser creater;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
@@ -208,16 +187,7 @@ public class Institution implements Serializable {
         this.web = web;
     }
 
-    public Coordinate getCoordinate() {
-        if (coordinate == null) {
-            coordinate = new Coordinate();
-        }
-        return coordinate;
-    }
-
-    public void setCoordinate(Coordinate coordinate) {
-        this.coordinate = coordinate;
-    }
+ 
 
     public String getCode() {
         return code;
@@ -322,69 +292,7 @@ public class Institution implements Serializable {
         this.parent = parent;
     }
 
-    public Area getGnArea() {
-        return gnArea;
-    }
 
-    public void setGnArea(Area gnArea) {
-        this.gnArea = gnArea;
-    }
-
-    public Area getPhmArea() {
-        return phmArea;
-    }
-
-    public void setPhmArea(Area phmArea) {
-        this.phmArea = phmArea;
-    }
-
-    public Area getPhiArea() {
-        return phiArea;
-    }
-
-    public void setPhiArea(Area phiArea) {
-        this.phiArea = phiArea;
-    }
-
-    public Area getDsDivision() {
-        return dsDivision;
-    }
-
-    public void setDsDivision(Area dsDivision) {
-        this.dsDivision = dsDivision;
-    }
-
-    public Area getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(Area district) {
-        this.district = district;
-    }
-
-    public Area getRdhsArea() {
-        return rdhsArea;
-    }
-
-    public void setRdhsArea(Area rdhsArea) {
-        this.rdhsArea = rdhsArea;
-    }
-
-    public Area getProvince() {
-        return province;
-    }
-
-    public void setProvince(Area province) {
-        this.province = province;
-    }
-
-    public Area getPdhsArea() {
-        return pdhsArea;
-    }
-
-    public void setPdhsArea(Area pdhsArea) {
-        this.pdhsArea = pdhsArea;
-    }
 
     public Institution getPoiInstitution() {
         if(poiInstitution==null){
@@ -405,14 +313,7 @@ public class Institution implements Serializable {
         this.pmci = pmci;
     }
 
-    public Area getMohArea() {
-        return mohArea;
-    }
-
-    public void setMohArea(Area mohArea) {
-        this.mohArea = mohArea;
-    }
-
+   
     
     
 }

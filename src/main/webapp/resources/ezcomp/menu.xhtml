@@ -24,21 +24,14 @@
 
 
                 <p:menuitem ajax="false" value="Home" icon="ui-icon-home" action="#{webUserController.toHome()}" />
-                <p:submenu label="Clients" rendered="#{webUserController.hasPrivilege('Client_Management')}" >
-                    <p:menuitem ajax="false" value="Search by IDs" action="#{clientController.toSearchClientById()}" />
-                    <p:menuitem ajax="false" value="Register New" action="#{clientController.toAddNewClient()}"  />
-                </p:submenu>
+                
 
                 <p:submenu label="Settings"  rendered="#{webUserController.hasPrivilege('User')}" >
                     <p:menuitem value="Change My Password" action="/webUser/my_password"  />
                     <p:menuitem value="Change My Details" action="/webUser/my_details"  />
                 </p:submenu>
 
-                <p:submenu label="Analysis" >
-                    <p:menuitem ajax="false" value="Queries" 
-                                action="#{queryComponentController.toProcessQuery()}"  />
-                    <p:menuitem ajax="false" value="Reports" action="/reports/index" ></p:menuitem>
-                </p:submenu>
+               
 
 
                 <p:submenu label="Institution Administration"  rendered="#{webUserController.hasPrivilege('Institution_Administration')}"  >
@@ -46,14 +39,12 @@
                                 action="/insAdmin/user_index" ajax="false"
                                 rendered="#{webUserController.hasPrivilege('Institution_Administration')}" />
                     <p:menuitem value="Manage Institutions" action="/insAdmin/institution_index"  />
-                    <p:menuitem value="Manage Areas" action="/insAdmin/area_index" ajax="false"  />
                     <p:menuitem value="Manage Metadata" action="/insAdmin/data_index"  />
                 </p:submenu>
 
                 <p:submenu label="System Administration"  rendered="#{webUserController.hasPrivilege('System_Administration')}"  >
                     <p:menuitem value="Manage Users" action="/webUser/index"  />
                     <p:menuitem value="Manage Institutions" action="/institution/List"  />
-                    <p:menuitem value="Manage Areas" action="/area/index" ajax="false"  />
                     <p:menuitem value="Manage Metadata" action="/systemAdmin/index"  />
                 </p:submenu>
 
@@ -69,54 +60,36 @@
 
 
                 <f:facet name="options">
-                    <p:inputText 
-                        value="#{clientController.searchingId}"/>
-                    <p:commandButton ajax="false" action="#{clientController.searchByAnyId()}" icon="ui-icon-search" ></p:commandButton>
-                    <p:spacer height="1" width="5" ></p:spacer>
-                    <p:outputLabel value="|"></p:outputLabel>
-                    <p:spacer height="1" width="5" ></p:spacer>
                     <p:commandButton action="#{webUserController.logOut()}" ajax="false"
                                      rendered="#{webUserController.loggedUser ne null}" value="#{webUserController.loggedUser.name} - Logout" />
-                
                     <p:commandButton action="#{webUserController.endAssumingRoles()}" ajax="false"
                                      rendered="#{webUserController.loggedUser.assumedRole ne null}" 
                                      value="Back as Admin" />
-              
                 </f:facet>
             </p:menubar>
 
             <p:menubar  rendered="#{webUserController.loggedUser ne null}"  autoDisplay="false"   styleClass="verticalmenu">
                 <p:submenu label="Menu"  >
                     <p:menuitem ajax="false" value="Home" icon="ui-icon-home" action="/index" />
-                    <p:submenu label="Clients"  >
-                        <p:menuitem ajax="false" value="Search by IDs" action="#{clientController.toSearchClientById()}" />
-                        <p:menuitem ajax="false" value="Register New" action="#{clientController.toAddNewClient()}"  />
-                    </p:submenu>
+                   
 
                     <p:submenu label="Settings" >
                         <p:menuitem value="Change My Password" action="/webUser/my_password"  />
                         <p:menuitem value="Change My Details" action="/webUser/my_details"  />
                     </p:submenu>
 
-                    <p:submenu label="Analysis" >
-                        <p:menuitem ajax="false" value="Queries" 
-                                    action="#{queryComponentController.toProcessQuery()}"  />
-                      <p:menuitem ajax="false" value="Reports" action="/reports/index" ></p:menuitem>
-                
-                    </p:submenu>
+                   
 
 
                     <p:submenu label="Institution Administration" >
                         <p:menuitem value="Manage Users" action="/webUser/index"  />
                         <p:menuitem value="Manage Institutions" action="/insAdmin/institution_index"  />
-                        <p:menuitem value="Manage Areas" action="/area/index" ajax="false"  />
                         <p:menuitem value="Manage Metadata" action="/insAdmin/index"  />
                     </p:submenu>
 
                     <p:submenu label="System Administration" >
                         <p:menuitem value="Manage Users" action="/webUser/index"  />
                         <p:menuitem value="Manage Institutions" action="/institution/List"  />
-                        <p:menuitem value="Manage Areas" action="/area/index" ajax="false"  />
                         <p:menuitem value="Manage Metadata" action="/systemAdmin/index"  />
                     </p:submenu>
 

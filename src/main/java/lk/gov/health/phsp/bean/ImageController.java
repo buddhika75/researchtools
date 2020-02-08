@@ -20,10 +20,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
 import lk.gov.health.phsp.bean.util.JsfUtil;
-import lk.gov.health.phsp.entity.ClientEncounterComponentItem;
 import lk.gov.health.phsp.entity.Item;
 import lk.gov.health.phsp.enums.DataRepresentationType;
-import lk.gov.health.phsp.facade.ComponentFacade;
 import org.primefaces.event.CaptureEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -38,10 +36,7 @@ public class ImageController implements Serializable {
 
     @Inject
     ItemController itemController;
-    @Inject
-    ClientEncounterComponentFormSetController clientEncounterComponentFormSetController;
-    @EJB
-    ComponentFacade componentFacade;
+   
 
     private List<String> photos = new ArrayList<>();
 
@@ -55,63 +50,8 @@ public class ImageController implements Serializable {
         return photos;
     }
 
-    @Inject
-    ClientController clientController;
+  
 
-    public ClientController getClientController() {
-        return clientController;
-    }
-
-    public StreamedContent getClientPhoto() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        if (context.getRenderResponse()) {
-            return new DefaultStreamedContent();
-        } else {
-            //System.out.println("getPatientController().getSelected() = " + getClientController().getSelected());
-            if (getClientController().getSelected() == null) {
-                return new DefaultStreamedContent();
-            }
-            ClientEncounterComponentItem dp = clientEncounterComponentFormSetController.fillClientValue(getClientController().getSelected(), "client_default_photo");
-            if (dp == null) {
-                return new DefaultStreamedContent();
-            }
-            byte[] p = dp.getByteArrayValue();
-            if (p == null) {
-                return new DefaultStreamedContent();
-            }
-            return new DefaultStreamedContent(new ByteArrayInputStream(p), dp.getShortTextValue(), dp.getLongTextValue());
-        }
-    }
-
-    public void oncapturePatientPhoto(CaptureEvent captureEvent) {
-        if (getClientController().getSelected() == null || getClientController().getSelected().getId() == null) {
-            JsfUtil.addErrorMessage("Client ?");
-            return;
-        }
-
-        Item defaultPhoto = itemController.findItemByCode("client_default_photo");
-        Item photo = itemController.findItemByCode("client_photo");
-
-        List<ClientEncounterComponentItem> ps = clientEncounterComponentFormSetController.fillClientValues(getClientController().getSelected(), "client_default_photo");
-        for (ClientEncounterComponentItem i : ps) {
-            i.setItem(photo);
-            componentFacade.edit(i);
-        }
-
-        ClientEncounterComponentItem ip = new ClientEncounterComponentItem();
-        ip.setClient(getClientController().getSelected());
-        ip.setClientValue(getClientController().getSelected());
-        ip.setItem(defaultPhoto);
-        ip.setByteArrayValue(captureEvent.getData());
-        ip.setShortTextValue("image/png");
-        ip.setLongTextValue("client_image_" + getClientController().getSelected().getId() + ".png");
-        ip.setDataRepresentationType(DataRepresentationType.Client);
-        componentFacade.create(ip);
-
-        clientController.finishCapturingPhotoWithWebCam();
-        
-        JsfUtil.addSuccessMessage("Photo captured from webcam.");
-    }
 
     public void oncapture(CaptureEvent captureEvent) {
         String photo = getRandomImageName();

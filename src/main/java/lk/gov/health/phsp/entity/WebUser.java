@@ -76,9 +76,7 @@ public class WebUser implements Serializable {
     String telNo;
     @ManyToOne
     Institution institution;
-    @ManyToOne
-    private Area area;
-
+  
     String code;
 
     /*
@@ -121,9 +119,7 @@ public class WebUser implements Serializable {
     private WebUserRole assumedRole;
     @Transient
     private Institution assumedInstitution;
-    @Transient
-    private Area assumedArea;
-
+  
     public WebUser() {
     }
 
@@ -375,16 +371,7 @@ public class WebUser implements Serializable {
         return meAdministrator;
     }
 
-    public Area getArea() {
-        if (assumedArea != null) {
-            return assumedArea;
-        }
-        return area;
-    }
 
-    public void setArea(Area area) {
-        this.area = area;
-    }
 
     public boolean isInstitutionSuperUser() {
         if(getWebUserRole()==WebUserRole.Institution_Super_User){
@@ -457,12 +444,6 @@ public class WebUser implements Serializable {
         this.assumedInstitution = assumedInstitution;
     }
 
-    public Area getAssumedArea() {
-        return assumedArea;
-    }
-
-    public void setAssumedArea(Area assumedArea) {
-        this.assumedArea = assumedArea;
-    }
+  
 
 }

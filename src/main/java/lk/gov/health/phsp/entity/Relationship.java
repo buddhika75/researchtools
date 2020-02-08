@@ -62,12 +62,6 @@ public class Relationship implements Serializable {
     private Item toItem;
     @ManyToOne
     private Item item;
-    @ManyToOne
-    private Area fromArea;
-    @ManyToOne
-    private Area toArea;
-    @ManyToOne
-    private Area area;
     private Double dblValue;
     private Long longValue1;
     private Long longValue2;
@@ -196,29 +190,7 @@ public class Relationship implements Serializable {
         this.item = item;
     }
 
-    public Area getFromArea() {
-        return fromArea;
-    }
 
-    public void setFromArea(Area fromArea) {
-        this.fromArea = fromArea;
-    }
-
-    public Area getToArea() {
-        return toArea;
-    }
-
-    public void setToArea(Area toArea) {
-        this.toArea = toArea;
-    }
-
-    public Area getArea() {
-        return area;
-    }
-
-    public void setArea(Area area) {
-        this.area = area;
-    }
 
     public RelationshipType getRelationshipType() {
         return relationshipType;

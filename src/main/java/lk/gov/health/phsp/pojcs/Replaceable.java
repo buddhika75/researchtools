@@ -7,7 +7,6 @@ package lk.gov.health.phsp.pojcs;
 
 import java.util.ArrayList;
 import java.util.List;
-import lk.gov.health.phsp.entity.ClientEncounterComponentItem;
 import lk.gov.health.phsp.enums.Evaluation;
 import lk.gov.health.phsp.enums.QueryDataType;
 
@@ -37,7 +36,7 @@ public class Replaceable {
     private String qryCode;
     
     
-    private ClientEncounterComponentItem clientEncounterComponentItem;
+ 
     List<String> options;
     String selectedOption;
     boolean inputText;
@@ -141,13 +140,7 @@ public class Replaceable {
         this.defaultValue = defaultValue;
     }
 
-    public ClientEncounterComponentItem getClientEncounterComponentItem() {
-        return clientEncounterComponentItem;
-    }
-
-    public void setClientEncounterComponentItem(ClientEncounterComponentItem clientEncounterComponentItem) {
-        this.clientEncounterComponentItem = clientEncounterComponentItem;
-    }
+  
 
     public String getValueCode() {
         return valueCode;
