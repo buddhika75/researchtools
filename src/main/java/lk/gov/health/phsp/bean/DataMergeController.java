@@ -225,13 +225,11 @@ public class DataMergeController implements Serializable {
                         val.setDataColumn(col);
                         val.setDataRow(row);
                         val.setUploadValue(cell.getContents());
-                        
+
                         getDataValueFacade().create(val);
 
                     }
                 }
-
-               
 
                 JsfUtil.addSuccessMessage("Succesful. All the data in Excel File Impoted to the database");
                 return "";
