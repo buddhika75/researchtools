@@ -36,7 +36,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlRootElement;
-import lk.gov.health.phsp.enums.SelectionDataType;
+import lk.gov.health.phsp.enums.DataType;
 
 /**
  *
@@ -60,7 +60,7 @@ public class Item implements Serializable {
 
     @Lob
     private String descreption;
-    private SelectionDataType dataType;
+    private DataType dataType;
     private Double absoluteMinimumDbl;
     private Double absoluteMaximumDbl;
     private Integer absoluteMinimumInt;
@@ -239,11 +239,11 @@ public class Item implements Serializable {
         this.descreption = descreption;
     }
 
-    public SelectionDataType getDataType() {
+    public DataType getDataType() {
         return dataType;
     }
 
-    public void setDataType(SelectionDataType dataType) {
+    public void setDataType(DataType dataType) {
         this.dataType = dataType;
     }
 

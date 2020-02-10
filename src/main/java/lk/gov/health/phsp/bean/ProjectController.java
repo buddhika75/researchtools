@@ -1,7 +1,7 @@
 package lk.gov.health.phsp.bean;
 
-import lk.gov.health.phsp.entity.DemoAccount;
-import lk.gov.health.phsp.facade.DemoAccountFacade;
+import lk.gov.health.phsp.entity.Project;
+import lk.gov.health.phsp.facade.ProjectFacade;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,38 +16,26 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.inject.Inject;
 import lk.gov.health.phsp.facade.util.JsfUtil;
 import lk.gov.health.phsp.facade.util.JsfUtil.PersistAction;
 
-@Named("demoAccountController")
+@Named("projectController")
 @SessionScoped
-public class DemoAccountController implements Serializable {
+public class ProjectController implements Serializable {
 
     @EJB
-    private lk.gov.health.phsp.facade.DemoAccountFacade ejbFacade;
-    @Inject
-    WebUserController webUserController;
-    private List<DemoAccount> items = null;
-    private DemoAccount selected;
+    private lk.gov.health.phsp.facade.ProjectFacade ejbFacade;
+    private List<Project> items = null;
+    private Project selected;
 
-    public String loginUseingDemoAccount() {
-        if (selected == null) {
-            JsfUtil.addErrorMessage("Select a demo account to log");
-        }
-        webUserController.setUserName(selected.getUserName());
-        webUserController.setPassword(selected.getPassword());
-        return webUserController.login();
+    public ProjectController() {
     }
 
-    public DemoAccountController() {
-    }
-
-    public DemoAccount getSelected() {
+    public Project getSelected() {
         return selected;
     }
 
-    public void setSelected(DemoAccount selected) {
+    public void setSelected(Project selected) {
         this.selected = selected;
     }
 
@@ -57,36 +45,36 @@ public class DemoAccountController implements Serializable {
     protected void initializeEmbeddableKey() {
     }
 
-    private DemoAccountFacade getFacade() {
+    private ProjectFacade getFacade() {
         return ejbFacade;
     }
 
-    public DemoAccount prepareCreate() {
-        selected = new DemoAccount();
+    public Project prepareCreate() {
+        selected = new Project();
         initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/BundleDemo").getString("DemoAccountCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/BundleRt1").getString("ProjectCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/BundleDemo").getString("DemoAccountUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/BundleRt1").getString("ProjectUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/BundleDemo").getString("DemoAccountDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/BundleRt1").getString("ProjectDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
-    public List<DemoAccount> getItems() {
+    public List<Project> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
@@ -112,38 +100,38 @@ public class DemoAccountController implements Serializable {
                 if (msg.length() > 0) {
                     JsfUtil.addErrorMessage(msg);
                 } else {
-                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/BundleDemo").getString("PersistenceErrorOccured"));
+                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/BundleRt1").getString("PersistenceErrorOccured"));
                 }
             } catch (Exception ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/BundleDemo").getString("PersistenceErrorOccured"));
+                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/BundleRt1").getString("PersistenceErrorOccured"));
             }
         }
     }
 
-    public DemoAccount getDemoAccount(java.lang.Long id) {
+    public Project getProject(java.lang.Long id) {
         return getFacade().find(id);
     }
 
-    public List<DemoAccount> getItemsAvailableSelectMany() {
+    public List<Project> getItemsAvailableSelectMany() {
         return getFacade().findAll();
     }
 
-    public List<DemoAccount> getItemsAvailableSelectOne() {
+    public List<Project> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
 
-    @FacesConverter(forClass = DemoAccount.class)
-    public static class DemoAccountControllerConverter implements Converter {
+    @FacesConverter(forClass = Project.class)
+    public static class ProjectControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            DemoAccountController controller = (DemoAccountController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "demoAccountController");
-            return controller.getDemoAccount(getKey(value));
+            ProjectController controller = (ProjectController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "projectController");
+            return controller.getProject(getKey(value));
         }
 
         java.lang.Long getKey(String value) {
@@ -163,11 +151,11 @@ public class DemoAccountController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof DemoAccount) {
-                DemoAccount o = (DemoAccount) object;
+            if (object instanceof Project) {
+                Project o = (Project) object;
                 return getStringKey(o.getId());
             } else {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), DemoAccount.class.getName()});
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Project.class.getName()});
                 return null;
             }
         }

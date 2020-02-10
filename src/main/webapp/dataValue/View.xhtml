@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="DataValueViewDlg" widgetVar="DataValueViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleRt1.ViewDataValueTitle}">
+            <h:form id="DataValueViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{dataValueController.selected != null}">
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_id}"/>
+                        <h:outputText value="#{dataValueController.selected.id}" title="#{bundleRt1.ViewDataValueTitle_id}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_dataColumn}"/>
+                        <h:outputText value="#{dataValueController.selected.dataColumn}" title="#{bundleRt1.ViewDataValueTitle_dataColumn}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_dataRow}"/>
+                        <h:outputText value="#{dataValueController.selected.dataRow}" title="#{bundleRt1.ViewDataValueTitle_dataRow}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_dataType}"/>
+                        <h:outputText value="#{dataValueController.selected.dataType}" title="#{bundleRt1.ViewDataValueTitle_dataType}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_uploadValue}"/>
+                        <h:outputText value="#{dataValueController.selected.uploadValue}" title="#{bundleRt1.ViewDataValueTitle_uploadValue}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_valueString}"/>
+                        <h:outputText value="#{dataValueController.selected.valueString}" title="#{bundleRt1.ViewDataValueTitle_valueString}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_valueStringLob}"/>
+                        <h:outputText value="#{dataValueController.selected.valueStringLob}" title="#{bundleRt1.ViewDataValueTitle_valueStringLob}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_valueDouble}"/>
+                        <h:outputText value="#{dataValueController.selected.valueDouble}" title="#{bundleRt1.ViewDataValueTitle_valueDouble}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_valueLong}"/>
+                        <h:outputText value="#{dataValueController.selected.valueLong}" title="#{bundleRt1.ViewDataValueTitle_valueLong}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_valueItem}"/>
+                        <h:outputText value="#{dataValueController.selected.valueItem}" title="#{bundleRt1.ViewDataValueTitle_valueItem}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_value}"/>
+                        <h:outputText value="#{dataValueController.selected.value}" title="#{bundleRt1.ViewDataValueTitle_value}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_commonController}"/>
+                        <h:outputText value="#{dataValueController.selected.commonController}" title="#{bundleRt1.ViewDataValueTitle_commonController}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_valueDateTime}"/>
+                        <h:outputText value="#{dataValueController.selected.valueDateTime}" title="#{bundleRt1.ViewDataValueTitle_valueDateTime}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundleRt1.ViewDataValueLabel_dateTimeFormat}"/>
+                        <h:outputText value="#{dataValueController.selected.dateTimeFormat}" title="#{bundleRt1.ViewDataValueTitle_dateTimeFormat}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundleRt1.Close}" onclick="DataValueViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

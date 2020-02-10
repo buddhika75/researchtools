@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="DataColumnEditDlg" widgetVar="DataColumnEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleRt1.EditDataColumnTitle}">
+            <h:form id="DataColumnEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{dataColumnController.selected != null}">
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{dataColumnController.selected.id}" title="#{bundleRt1.EditDataColumnTitle_id}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_dataSource}" for="dataSource" />
+                        <p:selectOneMenu id="dataSource" value="#{dataColumnController.selected.dataSource}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{dataSourceController.itemsAvailableSelectOne}"
+                                           var="dataSourceItem"
+                                           itemValue="#{dataSourceItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_project}" for="project" />
+                        <p:selectOneMenu id="project" value="#{dataColumnController.selected.project}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{projectController.itemsAvailableSelectOne}"
+                                           var="projectItem"
+                                           itemValue="#{projectItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_uploadName}" for="uploadName" />
+                        <p:inputText id="uploadName" value="#{dataColumnController.selected.uploadName}" title="#{bundleRt1.EditDataColumnTitle_uploadName}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_uploadOrderNo}" for="uploadOrderNo" />
+                        <p:inputText id="uploadOrderNo" value="#{dataColumnController.selected.uploadOrderNo}" title="#{bundleRt1.EditDataColumnTitle_uploadOrderNo}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_name}" for="name" />
+                        <p:inputText id="name" value="#{dataColumnController.selected.name}" title="#{bundleRt1.EditDataColumnTitle_name}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_orderNo}" for="orderNo" />
+                        <p:inputText id="orderNo" value="#{dataColumnController.selected.orderNo}" title="#{bundleRt1.EditDataColumnTitle_orderNo}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_referance}" for="referance" />
+                        <p:selectOneMenu id="referance" value="#{dataColumnController.selected.referance}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{dataColumnController.itemsAvailableSelectOne}"
+                                           var="referanceItem"
+                                           itemValue="#{referanceItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_createdBy}" for="createdBy" />
+                        <p:selectOneMenu id="createdBy" value="#{dataColumnController.selected.createdBy}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{webUserController.itemsAvailableSelectOne}"
+                                           var="createdByItem"
+                                           itemValue="#{createdByItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_createdAt}" for="createdAt" />
+                        <p:calendar id="createdAt" pattern="MM/dd/yyyy HH:mm:ss" value="#{dataColumnController.selected.createdAt}" title="#{bundleRt1.EditDataColumnTitle_createdAt}"  showOn="button"/>
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_editer}" for="editer" />
+                        <p:selectOneMenu id="editer" value="#{dataColumnController.selected.editer}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{webUserController.itemsAvailableSelectOne}"
+                                           var="editerItem"
+                                           itemValue="#{editerItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_editedAt}" for="editedAt" />
+                        <p:calendar id="editedAt" pattern="MM/dd/yyyy HH:mm:ss" value="#{dataColumnController.selected.editedAt}" title="#{bundleRt1.EditDataColumnTitle_editedAt}"  showOn="button"/>
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_retiredBy}" for="retiredBy" />
+                        <p:selectOneMenu id="retiredBy" value="#{dataColumnController.selected.retiredBy}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{webUserController.itemsAvailableSelectOne}"
+                                           var="retiredByItem"
+                                           itemValue="#{retiredByItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_retiredAt}" for="retiredAt" />
+                        <p:calendar id="retiredAt" pattern="MM/dd/yyyy HH:mm:ss" value="#{dataColumnController.selected.retiredAt}" title="#{bundleRt1.EditDataColumnTitle_retiredAt}"  showOn="button"/>
+                        <p:outputLabel value="#{bundleRt1.EditDataColumnLabel_retireComments}" for="retireComments" />
+                        <p:inputText id="retireComments" value="#{dataColumnController.selected.retireComments}" title="#{bundleRt1.EditDataColumnTitle_retireComments}" />
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{dataColumnController.update}" value="#{bundleRt1.Save}" update="display,:DataColumnListForm:datalist,:growl" oncomplete="handleSubmit(args, 'DataColumnEditDialog');"/>
+                    <p:commandButton value="#{bundleRt1.Cancel}" onclick="DataColumnEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

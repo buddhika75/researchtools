@@ -27,7 +27,7 @@ package lk.gov.health.phsp.enums;
  *
  * @author User
  */
-public enum SelectionDataType {
+public enum DataType {
     Short_Text,
     Long_Text,
     Byte_Array,
@@ -37,21 +37,4 @@ public enum SelectionDataType {
     DateTime,
     Boolean,
     Item_Reference,
-    Client_Reference,
-    Area_Reference,
-    Prescreption_Reference,
-    @Deprecated
-    Institution_Reference,
-    @Deprecated
-    Item_List_Reference,
-    @Deprecated
-    Client_List_Reference,
-    @Deprecated
-    Area_List_Reference,
-    @Deprecated
-    Institution_List_Reference,
-    @Deprecated
-    Free_Entry,
-    @Deprecated
-    Calculation,
 }

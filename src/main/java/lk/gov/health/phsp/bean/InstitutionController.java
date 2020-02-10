@@ -1,8 +1,6 @@
 package lk.gov.health.phsp.bean;
 
 import lk.gov.health.phsp.entity.Institution;
-import lk.gov.health.phsp.bean.util.JsfUtil;
-import lk.gov.health.phsp.bean.util.JsfUtil.PersistAction;
 import lk.gov.health.phsp.facade.InstitutionFacade;
 
 import java.io.Serializable;
@@ -25,6 +23,8 @@ import javax.inject.Inject;
 
 import lk.gov.health.phsp.enums.AreaType;
 import lk.gov.health.phsp.enums.InstitutionType;
+import lk.gov.health.phsp.facade.util.JsfUtil;
+import lk.gov.health.phsp.facade.util.JsfUtil.PersistAction;
 
 
 @Named("institutionController")

@@ -38,7 +38,7 @@ import lk.gov.health.phsp.enums.QueryType;
 import lk.gov.health.phsp.enums.QueryVariableEvaluationType;
 import lk.gov.health.phsp.enums.RelationshipType;
 import lk.gov.health.phsp.enums.RenderType;
-import lk.gov.health.phsp.enums.SelectionDataType;
+import lk.gov.health.phsp.enums.DataType;
 import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.jasypt.util.text.BasicTextEncryptor;
 
@@ -79,6 +79,23 @@ public class CommonController implements Serializable {
         return dateToString(date, "dd MMMM yyyy");
     }
 
+    public String doubleToString(Double dbl){
+        if(dbl==null) return null;
+        try{
+            return String.valueOf(dbl);
+        } catch(Exception e){
+            return null;
+        }
+    }
+    
+    public String longToString(Long lng){
+        if(lng==null) return null;
+        try{
+            return String.valueOf(lng);
+        } catch(Exception e){
+            return null;
+        }
+    }
     
     public String dateToString(Date date, String format) {
 
@@ -184,19 +201,18 @@ public class CommonController implements Serializable {
         return ps;
     }
 
-    public SelectionDataType[] getSelectionDataTypes() {
-        SelectionDataType[] sdts = new SelectionDataType[]{
-            SelectionDataType.Short_Text,
-            SelectionDataType.Long_Text,
-            SelectionDataType.Byte_Array,
-            SelectionDataType.Integer_Number,
-            SelectionDataType.Real_Number,
-            SelectionDataType.Boolean,
-            SelectionDataType.DateTime,
-            SelectionDataType.Item_Reference,
-            SelectionDataType.Client_Reference,
-            SelectionDataType.Area_Reference,
-            SelectionDataType.Prescreption_Reference};
+    public DataType[] getSelectionDataTypes() {
+        DataType[] sdts = new DataType[]{
+            DataType.Short_Text,
+            DataType.Long_Text,
+            DataType.Byte_Array,
+            DataType.Integer_Number,
+            DataType.Real_Number,
+            DataType.Boolean,
+            DataType.DateTime,
+            DataType.Item_Reference,
+          
+        };
         return sdts;
     }
 

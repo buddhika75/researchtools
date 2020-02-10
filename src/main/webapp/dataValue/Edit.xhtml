@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="DataValueEditDlg" widgetVar="DataValueEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleRt1.EditDataValueTitle}">
+            <h:form id="DataValueEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{dataValueController.selected != null}">
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{dataValueController.selected.id}" title="#{bundleRt1.EditDataValueTitle_id}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_dataColumn}" for="dataColumn" />
+                        <p:selectOneMenu id="dataColumn" value="#{dataValueController.selected.dataColumn}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{dataColumnController.itemsAvailableSelectOne}"
+                                           var="dataColumnItem"
+                                           itemValue="#{dataColumnItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_dataRow}" for="dataRow" />
+                        <p:selectOneMenu id="dataRow" value="#{dataValueController.selected.dataRow}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{dataRowController.itemsAvailableSelectOne}"
+                                           var="dataRowItem"
+                                           itemValue="#{dataRowItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_dataType}" for="dataType" />
+                        <p:inputText id="dataType" value="#{dataValueController.selected.dataType}" title="#{bundleRt1.EditDataValueTitle_dataType}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_uploadValue}" for="uploadValue" />
+                        <p:inputTextarea rows="4" cols="30" id="uploadValue" value="#{dataValueController.selected.uploadValue}" title="#{bundleRt1.EditDataValueTitle_uploadValue}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_valueString}" for="valueString" />
+                        <p:inputText id="valueString" value="#{dataValueController.selected.valueString}" title="#{bundleRt1.EditDataValueTitle_valueString}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_valueStringLob}" for="valueStringLob" />
+                        <p:inputTextarea rows="4" cols="30" id="valueStringLob" value="#{dataValueController.selected.valueStringLob}" title="#{bundleRt1.EditDataValueTitle_valueStringLob}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_valueDouble}" for="valueDouble" />
+                        <p:inputText id="valueDouble" value="#{dataValueController.selected.valueDouble}" title="#{bundleRt1.EditDataValueTitle_valueDouble}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_valueLong}" for="valueLong" />
+                        <p:inputText id="valueLong" value="#{dataValueController.selected.valueLong}" title="#{bundleRt1.EditDataValueTitle_valueLong}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_valueItem}" for="valueItem" />
+                        <p:selectOneMenu id="valueItem" value="#{dataValueController.selected.valueItem}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{itemController.itemsAvailableSelectOne}"
+                                           var="valueItemItem"
+                                           itemValue="#{valueItemItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_value}" for="value" />
+                        <p:inputText id="value" value="#{dataValueController.selected.value}" title="#{bundleRt1.EditDataValueTitle_value}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_commonController}" for="commonController" />
+                        <p:inputText id="commonController" value="#{dataValueController.selected.commonController}" title="#{bundleRt1.EditDataValueTitle_commonController}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_valueDateTime}" for="valueDateTime" />
+                        <p:calendar id="valueDateTime" pattern="MM/dd/yyyy HH:mm:ss" value="#{dataValueController.selected.valueDateTime}" title="#{bundleRt1.EditDataValueTitle_valueDateTime}"  showOn="button"/>
+                        <p:outputLabel value="#{bundleRt1.EditDataValueLabel_dateTimeFormat}" for="dateTimeFormat" />
+                        <p:inputText id="dateTimeFormat" value="#{dataValueController.selected.dateTimeFormat}" title="#{bundleRt1.EditDataValueTitle_dateTimeFormat}" />
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{dataValueController.update}" value="#{bundleRt1.Save}" update="display,:DataValueListForm:datalist,:growl" oncomplete="handleSubmit(args, 'DataValueEditDialog');"/>
+                    <p:commandButton value="#{bundleRt1.Cancel}" onclick="DataValueEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -1,7 +1,7 @@
 package lk.gov.health.phsp.bean;
 
-import lk.gov.health.phsp.entity.DemoAccount;
-import lk.gov.health.phsp.facade.DemoAccountFacade;
+import lk.gov.health.phsp.entity.DataValue;
+import lk.gov.health.phsp.facade.DataValueFacade;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,38 +16,26 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
-import javax.inject.Inject;
 import lk.gov.health.phsp.facade.util.JsfUtil;
 import lk.gov.health.phsp.facade.util.JsfUtil.PersistAction;
 
-@Named("demoAccountController")
+@Named("dataValueController")
 @SessionScoped
-public class DemoAccountController implements Serializable {
+public class DataValueController implements Serializable {
 
     @EJB
-    private lk.gov.health.phsp.facade.DemoAccountFacade ejbFacade;
-    @Inject
-    WebUserController webUserController;
-    private List<DemoAccount> items = null;
-    private DemoAccount selected;
+    private lk.gov.health.phsp.facade.DataValueFacade ejbFacade;
+    private List<DataValue> items = null;
+    private DataValue selected;
 
-    public String loginUseingDemoAccount() {
-        if (selected == null) {
-            JsfUtil.addErrorMessage("Select a demo account to log");
-        }
-        webUserController.setUserName(selected.getUserName());
-        webUserController.setPassword(selected.getPassword());
-        return webUserController.login();
+    public DataValueController() {
     }
 
-    public DemoAccountController() {
-    }
-
-    public DemoAccount getSelected() {
+    public DataValue getSelected() {
         return selected;
     }
 
-    public void setSelected(DemoAccount selected) {
+    public void setSelected(DataValue selected) {
         this.selected = selected;
     }
 
@@ -57,36 +45,36 @@ public class DemoAccountController implements Serializable {
     protected void initializeEmbeddableKey() {
     }
 
-    private DemoAccountFacade getFacade() {
+    private DataValueFacade getFacade() {
         return ejbFacade;
     }
 
-    public DemoAccount prepareCreate() {
-        selected = new DemoAccount();
+    public DataValue prepareCreate() {
+        selected = new DataValue();
         initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/BundleDemo").getString("DemoAccountCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/BundleRt1").getString("DataValueCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/BundleDemo").getString("DemoAccountUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/BundleRt1").getString("DataValueUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/BundleDemo").getString("DemoAccountDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/BundleRt1").getString("DataValueDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
-    public List<DemoAccount> getItems() {
+    public List<DataValue> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
@@ -112,38 +100,38 @@ public class DemoAccountController implements Serializable {
                 if (msg.length() > 0) {
                     JsfUtil.addErrorMessage(msg);
                 } else {
-                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/BundleDemo").getString("PersistenceErrorOccured"));
+                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/BundleRt1").getString("PersistenceErrorOccured"));
                 }
             } catch (Exception ex) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/BundleDemo").getString("PersistenceErrorOccured"));
+                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/BundleRt1").getString("PersistenceErrorOccured"));
             }
         }
     }
 
-    public DemoAccount getDemoAccount(java.lang.Long id) {
+    public DataValue getDataValue(java.lang.Long id) {
         return getFacade().find(id);
     }
 
-    public List<DemoAccount> getItemsAvailableSelectMany() {
+    public List<DataValue> getItemsAvailableSelectMany() {
         return getFacade().findAll();
     }
 
-    public List<DemoAccount> getItemsAvailableSelectOne() {
+    public List<DataValue> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
 
-    @FacesConverter(forClass = DemoAccount.class)
-    public static class DemoAccountControllerConverter implements Converter {
+    @FacesConverter(forClass = DataValue.class)
+    public static class DataValueControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            DemoAccountController controller = (DemoAccountController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "demoAccountController");
-            return controller.getDemoAccount(getKey(value));
+            DataValueController controller = (DataValueController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "dataValueController");
+            return controller.getDataValue(getKey(value));
         }
 
         java.lang.Long getKey(String value) {
@@ -163,11 +151,11 @@ public class DemoAccountController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof DemoAccount) {
-                DemoAccount o = (DemoAccount) object;
+            if (object instanceof DataValue) {
+                DataValue o = (DataValue) object;
                 return getStringKey(o.getId());
             } else {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), DemoAccount.class.getName()});
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), DataValue.class.getName()});
                 return null;
             }
         }

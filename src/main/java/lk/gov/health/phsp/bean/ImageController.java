@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ejb.EJB;
+
 import javax.enterprise.context.RequestScoped;
 import javax.faces.FacesException;
 import javax.faces.context.FacesContext;
@@ -19,12 +19,10 @@ import javax.imageio.stream.FileImageOutputStream;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
-import lk.gov.health.phsp.bean.util.JsfUtil;
-import lk.gov.health.phsp.entity.Item;
-import lk.gov.health.phsp.enums.DataRepresentationType;
+
+
 import org.primefaces.event.CaptureEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
+
 
 /**
  *

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="DataSourceCreateDlg" widgetVar="DataSourceCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleRt1.CreateDataSourceTitle}">
+            <h:form id="DataSourceCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{dataSourceController.selected != null}">
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{dataSourceController.selected.id}" title="#{bundleRt1.CreateDataSourceTitle_id}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_project}" for="project" />
+                        <p:selectOneMenu id="project" value="#{dataSourceController.selected.project}" >
+                            <f:selectItems value="#{projectController.itemsAvailableSelectOne}"
+                                           var="projectItem"
+                                           itemValue="#{projectItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_name}" for="name" />
+                        <p:inputText id="name" value="#{dataSourceController.selected.name}" title="#{bundleRt1.CreateDataSourceTitle_name}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_fileName}" for="fileName" />
+                        <p:inputText id="fileName" value="#{dataSourceController.selected.fileName}" title="#{bundleRt1.CreateDataSourceTitle_fileName}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_fileType}" for="fileType" />
+                        <p:inputText id="fileType" value="#{dataSourceController.selected.fileType}" title="#{bundleRt1.CreateDataSourceTitle_fileType}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_fileContents}" for="fileContents" />
+                        <p:inputText id="fileContents" value="#{dataSourceController.selected.fileContents}" title="#{bundleRt1.CreateDataSourceTitle_fileContents}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_orderNo}" for="orderNo" />
+                        <p:inputText id="orderNo" value="#{dataSourceController.selected.orderNo}" title="#{bundleRt1.CreateDataSourceTitle_orderNo}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_createdBy}" for="createdBy" />
+                        <p:selectOneMenu id="createdBy" value="#{dataSourceController.selected.createdBy}" >
+                            <f:selectItems value="#{webUserController.itemsAvailableSelectOne}"
+                                           var="createdByItem"
+                                           itemValue="#{createdByItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_createdAt}" for="createdAt" />
+                        <p:calendar id="createdAt" pattern="MM/dd/yyyy HH:mm:ss" value="#{dataSourceController.selected.createdAt}" title="#{bundleRt1.EditDataSourceTitle_createdAt}"  showOn="button"/>
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_editer}" for="editer" />
+                        <p:selectOneMenu id="editer" value="#{dataSourceController.selected.editer}" >
+                            <f:selectItems value="#{webUserController.itemsAvailableSelectOne}"
+                                           var="editerItem"
+                                           itemValue="#{editerItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_editedAt}" for="editedAt" />
+                        <p:calendar id="editedAt" pattern="MM/dd/yyyy HH:mm:ss" value="#{dataSourceController.selected.editedAt}" title="#{bundleRt1.EditDataSourceTitle_editedAt}"  showOn="button"/>
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_retiredBy}" for="retiredBy" />
+                        <p:selectOneMenu id="retiredBy" value="#{dataSourceController.selected.retiredBy}" >
+                            <f:selectItems value="#{webUserController.itemsAvailableSelectOne}"
+                                           var="retiredByItem"
+                                           itemValue="#{retiredByItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_retiredAt}" for="retiredAt" />
+                        <p:calendar id="retiredAt" pattern="MM/dd/yyyy HH:mm:ss" value="#{dataSourceController.selected.retiredAt}" title="#{bundleRt1.EditDataSourceTitle_retiredAt}"  showOn="button"/>
+                        <p:outputLabel value="#{bundleRt1.CreateDataSourceLabel_retireComments}" for="retireComments" />
+                        <p:inputText id="retireComments" value="#{dataSourceController.selected.retireComments}" title="#{bundleRt1.CreateDataSourceTitle_retireComments}" />
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{dataSourceController.create}" value="#{bundleRt1.Save}" update="display,:DataSourceListForm:datalist,:growl" oncomplete="handleSubmit(args,'DataSourceCreateDialog');"/>
+                    <p:commandButton value="#{bundleRt1.Cancel}" onclick="DataSourceCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

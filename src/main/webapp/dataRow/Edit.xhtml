@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="DataRowEditDlg" widgetVar="DataRowEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleRt1.EditDataRowTitle}">
+            <h:form id="DataRowEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{dataRowController.selected != null}">
+                        <p:outputLabel value="#{bundleRt1.EditDataRowLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{dataRowController.selected.id}" title="#{bundleRt1.EditDataRowTitle_id}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataRowLabel_uploadOrderNo}" for="uploadOrderNo" />
+                        <p:inputText id="uploadOrderNo" value="#{dataRowController.selected.uploadOrderNo}" title="#{bundleRt1.EditDataRowTitle_uploadOrderNo}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataRowLabel_orderNo}" for="orderNo" />
+                        <p:inputText id="orderNo" value="#{dataRowController.selected.orderNo}" title="#{bundleRt1.EditDataRowTitle_orderNo}" />
+                        <p:outputLabel value="#{bundleRt1.EditDataRowLabel_dataSource}" for="dataSource" />
+                        <p:selectOneMenu id="dataSource" value="#{dataRowController.selected.dataSource}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{dataSourceController.itemsAvailableSelectOne}"
+                                           var="dataSourceItem"
+                                           itemValue="#{dataSourceItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataRowLabel_project}" for="project" />
+                        <p:selectOneMenu id="project" value="#{dataRowController.selected.project}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{projectController.itemsAvailableSelectOne}"
+                                           var="projectItem"
+                                           itemValue="#{projectItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataRowLabel_createdBy}" for="createdBy" />
+                        <p:selectOneMenu id="createdBy" value="#{dataRowController.selected.createdBy}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{webUserController.itemsAvailableSelectOne}"
+                                           var="createdByItem"
+                                           itemValue="#{createdByItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataRowLabel_createdAt}" for="createdAt" />
+                        <p:calendar id="createdAt" pattern="MM/dd/yyyy HH:mm:ss" value="#{dataRowController.selected.createdAt}" title="#{bundleRt1.EditDataRowTitle_createdAt}"  showOn="button"/>
+                        <p:outputLabel value="#{bundleRt1.EditDataRowLabel_editer}" for="editer" />
+                        <p:selectOneMenu id="editer" value="#{dataRowController.selected.editer}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{webUserController.itemsAvailableSelectOne}"
+                                           var="editerItem"
+                                           itemValue="#{editerItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataRowLabel_editedAt}" for="editedAt" />
+                        <p:calendar id="editedAt" pattern="MM/dd/yyyy HH:mm:ss" value="#{dataRowController.selected.editedAt}" title="#{bundleRt1.EditDataRowTitle_editedAt}"  showOn="button"/>
+                        <p:outputLabel value="#{bundleRt1.EditDataRowLabel_retiredBy}" for="retiredBy" />
+                        <p:selectOneMenu id="retiredBy" value="#{dataRowController.selected.retiredBy}" >
+                            <f:selectItem itemLabel="#{bundleRt1.SelectOneMessage}"/>
+                            <f:selectItems value="#{webUserController.itemsAvailableSelectOne}"
+                                           var="retiredByItem"
+                                           itemValue="#{retiredByItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.EditDataRowLabel_retiredAt}" for="retiredAt" />
+                        <p:calendar id="retiredAt" pattern="MM/dd/yyyy HH:mm:ss" value="#{dataRowController.selected.retiredAt}" title="#{bundleRt1.EditDataRowTitle_retiredAt}"  showOn="button"/>
+                        <p:outputLabel value="#{bundleRt1.EditDataRowLabel_retireComments}" for="retireComments" />
+                        <p:inputText id="retireComments" value="#{dataRowController.selected.retireComments}" title="#{bundleRt1.EditDataRowTitle_retireComments}" />
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{dataRowController.update}" value="#{bundleRt1.Save}" update="display,:DataRowListForm:datalist,:growl" oncomplete="handleSubmit(args, 'DataRowEditDialog');"/>
+                    <p:commandButton value="#{bundleRt1.Cancel}" onclick="DataRowEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

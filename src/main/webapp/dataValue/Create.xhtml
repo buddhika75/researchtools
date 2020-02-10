@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="DataValueCreateDlg" widgetVar="DataValueCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleRt1.CreateDataValueTitle}">
+            <h:form id="DataValueCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{dataValueController.selected != null}">
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{dataValueController.selected.id}" title="#{bundleRt1.CreateDataValueTitle_id}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_dataColumn}" for="dataColumn" />
+                        <p:selectOneMenu id="dataColumn" value="#{dataValueController.selected.dataColumn}" >
+                            <f:selectItems value="#{dataColumnController.itemsAvailableSelectOne}"
+                                           var="dataColumnItem"
+                                           itemValue="#{dataColumnItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_dataRow}" for="dataRow" />
+                        <p:selectOneMenu id="dataRow" value="#{dataValueController.selected.dataRow}" >
+                            <f:selectItems value="#{dataRowController.itemsAvailableSelectOne}"
+                                           var="dataRowItem"
+                                           itemValue="#{dataRowItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_dataType}" for="dataType" />
+                        <p:inputText id="dataType" value="#{dataValueController.selected.dataType}" title="#{bundleRt1.CreateDataValueTitle_dataType}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_uploadValue}" for="uploadValue" />
+                        <p:inputTextarea rows="4" cols="30" id="uploadValue" value="#{dataValueController.selected.uploadValue}" title="#{bundleRt1.CreateDataValueTitle_uploadValue}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_valueString}" for="valueString" />
+                        <p:inputText id="valueString" value="#{dataValueController.selected.valueString}" title="#{bundleRt1.CreateDataValueTitle_valueString}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_valueStringLob}" for="valueStringLob" />
+                        <p:inputTextarea rows="4" cols="30" id="valueStringLob" value="#{dataValueController.selected.valueStringLob}" title="#{bundleRt1.CreateDataValueTitle_valueStringLob}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_valueDouble}" for="valueDouble" />
+                        <p:inputText id="valueDouble" value="#{dataValueController.selected.valueDouble}" title="#{bundleRt1.CreateDataValueTitle_valueDouble}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_valueLong}" for="valueLong" />
+                        <p:inputText id="valueLong" value="#{dataValueController.selected.valueLong}" title="#{bundleRt1.CreateDataValueTitle_valueLong}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_valueItem}" for="valueItem" />
+                        <p:selectOneMenu id="valueItem" value="#{dataValueController.selected.valueItem}" >
+                            <f:selectItems value="#{itemController.itemsAvailableSelectOne}"
+                                           var="valueItemItem"
+                                           itemValue="#{valueItemItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_value}" for="value" />
+                        <p:inputText id="value" value="#{dataValueController.selected.value}" title="#{bundleRt1.CreateDataValueTitle_value}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_commonController}" for="commonController" />
+                        <p:inputText id="commonController" value="#{dataValueController.selected.commonController}" title="#{bundleRt1.CreateDataValueTitle_commonController}" />
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_valueDateTime}" for="valueDateTime" />
+                        <p:calendar id="valueDateTime" pattern="MM/dd/yyyy HH:mm:ss" value="#{dataValueController.selected.valueDateTime}" title="#{bundleRt1.EditDataValueTitle_valueDateTime}"  showOn="button"/>
+                        <p:outputLabel value="#{bundleRt1.CreateDataValueLabel_dateTimeFormat}" for="dateTimeFormat" />
+                        <p:inputText id="dateTimeFormat" value="#{dataValueController.selected.dateTimeFormat}" title="#{bundleRt1.CreateDataValueTitle_dateTimeFormat}" />
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{dataValueController.create}" value="#{bundleRt1.Save}" update="display,:DataValueListForm:datalist,:growl" oncomplete="handleSubmit(args,'DataValueCreateDialog');"/>
+                    <p:commandButton value="#{bundleRt1.Cancel}" onclick="DataValueCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

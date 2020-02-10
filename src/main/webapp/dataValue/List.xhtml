@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/template.xhtml">
+
+
+        <ui:define name="title">
+            <h:outputText value="#{bundleRt1.ListDataValueTitle}"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            <h:form id="DataValueListForm">
+                <p:panel header="#{bundleRt1.ListDataValueTitle}">
+                    <p:dataTable id="datalist" value="#{dataValueController.items}" var="item"
+                                 selectionMode="single" selection="#{dataValueController.selected}"
+                                 paginator="true"
+                                 rowKey="#{item.id}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 >
+
+                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_id}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_dataColumn}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dataColumn}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_dataRow}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dataRow}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_dataType}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dataType}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_uploadValue}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.uploadValue}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_valueString}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.valueString}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_valueStringLob}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.valueStringLob}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_valueDouble}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.valueDouble}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_valueLong}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.valueLong}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_valueItem}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.valueItem}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_value}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.value}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_commonController}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.commonController}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_valueDateTime}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.valueDateTime}">
+                                <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundleRt1.ListDataValueTitle_dateTimeFormat}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dateTimeFormat}"/>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundleRt1.Create}" actionListener="#{dataValueController.prepareCreate}" update=":DataValueCreateForm" oncomplete="PF('DataValueCreateDialog').show()"/>
+                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundleRt1.View}" update=":DataValueViewForm" oncomplete="PF('DataValueViewDialog').show()" disabled="#{empty dataValueController.selected}"/>
+                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundleRt1.Edit}" update=":DataValueEditForm" oncomplete="PF('DataValueEditDialog').show()" disabled="#{empty dataValueController.selected}"/>
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundleRt1.Delete}" actionListener="#{dataValueController.destroy}" update=":growl,datalist" disabled="#{empty dataValueController.selected}"/>
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
+            <ui:include src="Create.xhtml"/>
+            <ui:include src="Edit.xhtml"/>
+            <ui:include src="View.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>

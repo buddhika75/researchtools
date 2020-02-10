@@ -1,8 +1,6 @@
 package lk.gov.health.phsp.bean;
 
 import lk.gov.health.phsp.entity.Person;
-import lk.gov.health.phsp.bean.util.JsfUtil;
-import lk.gov.health.phsp.bean.util.JsfUtil.PersistAction;
 import lk.gov.health.phsp.facade.PersonFacade;
 
 import java.io.Serializable;
@@ -18,6 +16,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import lk.gov.health.phsp.facade.util.JsfUtil;
+import lk.gov.health.phsp.facade.util.JsfUtil.PersistAction;
 
 @Named("personController")
 @SessionScoped

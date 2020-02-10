@@ -23,6 +23,10 @@
             <base-name>/BundleQuery</base-name>
             <var>bundleQuery</var>
         </resource-bundle>
+        <resource-bundle>
+            <base-name>/BundleRt1</base-name>
+            <var>bundleRt1</var>
+        </resource-bundle>
     </application>
     <navigation-rule>
         <from-view-id>*</from-view-id>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="DataRowViewDlg" widgetVar="DataRowViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleRt1.ViewDataRowTitle}">
+            <h:form id="DataRowViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{dataRowController.selected != null}">
+                        <h:outputText value="#{bundleRt1.ViewDataRowLabel_id}"/>
+                        <h:outputText value="#{dataRowController.selected.id}" title="#{bundleRt1.ViewDataRowTitle_id}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataRowLabel_uploadOrderNo}"/>
+                        <h:outputText value="#{dataRowController.selected.uploadOrderNo}" title="#{bundleRt1.ViewDataRowTitle_uploadOrderNo}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataRowLabel_orderNo}"/>
+                        <h:outputText value="#{dataRowController.selected.orderNo}" title="#{bundleRt1.ViewDataRowTitle_orderNo}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataRowLabel_dataSource}"/>
+                        <h:outputText value="#{dataRowController.selected.dataSource}" title="#{bundleRt1.ViewDataRowTitle_dataSource}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataRowLabel_project}"/>
+                        <h:outputText value="#{dataRowController.selected.project}" title="#{bundleRt1.ViewDataRowTitle_project}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataRowLabel_createdBy}"/>
+                        <h:outputText value="#{dataRowController.selected.createdBy}" title="#{bundleRt1.ViewDataRowTitle_createdBy}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataRowLabel_createdAt}"/>
+                        <h:outputText value="#{dataRowController.selected.createdAt}" title="#{bundleRt1.ViewDataRowTitle_createdAt}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundleRt1.ViewDataRowLabel_editer}"/>
+                        <h:outputText value="#{dataRowController.selected.editer}" title="#{bundleRt1.ViewDataRowTitle_editer}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataRowLabel_editedAt}"/>
+                        <h:outputText value="#{dataRowController.selected.editedAt}" title="#{bundleRt1.ViewDataRowTitle_editedAt}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundleRt1.ViewDataRowLabel_retiredBy}"/>
+                        <h:outputText value="#{dataRowController.selected.retiredBy}" title="#{bundleRt1.ViewDataRowTitle_retiredBy}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataRowLabel_retiredAt}"/>
+                        <h:outputText value="#{dataRowController.selected.retiredAt}" title="#{bundleRt1.ViewDataRowTitle_retiredAt}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundleRt1.ViewDataRowLabel_retireComments}"/>
+                        <h:outputText value="#{dataRowController.selected.retireComments}" title="#{bundleRt1.ViewDataRowTitle_retireComments}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundleRt1.Close}" onclick="DataRowViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

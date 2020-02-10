@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="DataColumnViewDlg" widgetVar="DataColumnViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundleRt1.ViewDataColumnTitle}">
+            <h:form id="DataColumnViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{dataColumnController.selected != null}">
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_id}"/>
+                        <h:outputText value="#{dataColumnController.selected.id}" title="#{bundleRt1.ViewDataColumnTitle_id}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_dataSource}"/>
+                        <h:outputText value="#{dataColumnController.selected.dataSource}" title="#{bundleRt1.ViewDataColumnTitle_dataSource}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_project}"/>
+                        <h:outputText value="#{dataColumnController.selected.project}" title="#{bundleRt1.ViewDataColumnTitle_project}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_uploadName}"/>
+                        <h:outputText value="#{dataColumnController.selected.uploadName}" title="#{bundleRt1.ViewDataColumnTitle_uploadName}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_uploadOrderNo}"/>
+                        <h:outputText value="#{dataColumnController.selected.uploadOrderNo}" title="#{bundleRt1.ViewDataColumnTitle_uploadOrderNo}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_name}"/>
+                        <h:outputText value="#{dataColumnController.selected.name}" title="#{bundleRt1.ViewDataColumnTitle_name}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_orderNo}"/>
+                        <h:outputText value="#{dataColumnController.selected.orderNo}" title="#{bundleRt1.ViewDataColumnTitle_orderNo}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_referance}"/>
+                        <h:outputText value="#{dataColumnController.selected.referance}" title="#{bundleRt1.ViewDataColumnTitle_referance}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_createdBy}"/>
+                        <h:outputText value="#{dataColumnController.selected.createdBy}" title="#{bundleRt1.ViewDataColumnTitle_createdBy}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_createdAt}"/>
+                        <h:outputText value="#{dataColumnController.selected.createdAt}" title="#{bundleRt1.ViewDataColumnTitle_createdAt}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_editer}"/>
+                        <h:outputText value="#{dataColumnController.selected.editer}" title="#{bundleRt1.ViewDataColumnTitle_editer}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_editedAt}"/>
+                        <h:outputText value="#{dataColumnController.selected.editedAt}" title="#{bundleRt1.ViewDataColumnTitle_editedAt}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_retiredBy}"/>
+                        <h:outputText value="#{dataColumnController.selected.retiredBy}" title="#{bundleRt1.ViewDataColumnTitle_retiredBy}"/>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_retiredAt}"/>
+                        <h:outputText value="#{dataColumnController.selected.retiredAt}" title="#{bundleRt1.ViewDataColumnTitle_retiredAt}">
+                            <f:convertDateTime pattern="MM/dd/yyyy HH:mm:ss" />
+                        </h:outputText>
+                        <h:outputText value="#{bundleRt1.ViewDataColumnLabel_retireComments}"/>
+                        <h:outputText value="#{dataColumnController.selected.retireComments}" title="#{bundleRt1.ViewDataColumnTitle_retireComments}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundleRt1.Close}" onclick="DataColumnViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
