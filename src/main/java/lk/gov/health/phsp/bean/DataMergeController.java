@@ -119,7 +119,7 @@ public class DataMergeController implements Serializable {
             return "";
         }
         fillDataSourcesOfSelectedProject();
-        fillDataColumnsOfSelectedProject();
+        fillMasterDataColumnsOfSelectedProject();
         return "/dataMerge/project";
     }
 
@@ -145,6 +145,7 @@ public class DataMergeController implements Serializable {
         createColumnModelForSelectedDataSource();
         createRowsForSelectedDataSource();
         fillDataValuesForSelectedDataSource();
+        createColumnsForSelectedProject();
     }
 
     public void fillDataForSelectedProject() {
@@ -197,7 +198,7 @@ public class DataMergeController implements Serializable {
         dataSourcesOfSelectedProject = getDataSourceFacade().findByJpql(j, m);
     }
 
-    public void fillDataColumnsOfSelectedProject() {
+    public void fillMasterDataColumnsOfSelectedProject() {
         String j = "select ds from DataColumn ds "
                 + " where ds.retired=:ret "
                 + " and ds.project=:pro"
@@ -362,9 +363,15 @@ public class DataMergeController implements Serializable {
                 }
 
                 JsfUtil.addSuccessMessage("Succesful. All the data in Excel File Impoted to the database");
+                
+                
                 fillDataForSelectedDatasource();
                 identifyDataTypesOfColumnsOfSelectedDataSource();
+                
                 updateProjectColumns();
+                
+                fillMasterDataColumnsOfSelectedProject();
+                
                 return toViewSelectedDatasourceWithoutFillingData();
 
             } catch (IOException ex) {
@@ -380,6 +387,7 @@ public class DataMergeController implements Serializable {
     }
 
     public void updateProjectColumns() {
+        System.out.println("update Project Columns");
         String j = "select c from DataColumn c "
                 + " where c.retired=:ret "
                 + " and c.project=:pro "
@@ -388,11 +396,17 @@ public class DataMergeController implements Serializable {
         m.put("ret", false);
         m.put("pro", selectedProject);
         List<DataColumn> pcs = getDataColumnFacade().findByJpql(j, m);
+        System.out.println("pcs = " + pcs);
+        System.out.println("dataColumnsOfSelectedDataSource = " + dataColumnsOfSelectedDataSource);
         for (DataColumn dsCol : dataColumnsOfSelectedDataSource) {
             boolean suitableColumnFound = false;
             boolean nameIsExactlyTheSame = false;
             boolean dataTypeIsSimilar = false;
+            
             for (DataColumn pCol : pcs) {
+                
+                
+                System.out.println("pCol = " + pCol);
                 if (dsCol.getName().equalsIgnoreCase(pCol.getName())) {
                     nameIsExactlyTheSame = true;
                 }
@@ -400,14 +414,20 @@ public class DataMergeController implements Serializable {
                     dataTypeIsSimilar = true;
                 }
 
+                System.out.println("nameIsExactlyTheSame = " + nameIsExactlyTheSame);
+                System.out.println("dataTypeIsSimilar = " + dataTypeIsSimilar);
+                
                 //TODO: Add More Logic
                 if (nameIsExactlyTheSame && dataTypeIsSimilar) {
                     suitableColumnFound = true;
                     dsCol.setReferance(pCol);
                     getDataColumnFacade().edit(dsCol);
+                    break;
                 }
 
             }
+            
+            System.out.println("suitableColumnFound = " + suitableColumnFound);
 
             if (!suitableColumnFound) {
                 DataColumn newPCol = new DataColumn();
