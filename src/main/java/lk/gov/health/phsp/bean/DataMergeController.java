@@ -93,13 +93,18 @@ public class DataMergeController implements Serializable {
     private List<DataSource> dataSourcesOfSelectedProject;
     private List<Project> myProjects;
 
+    private List<DataColumn> dataColumnsMasterOfSelectedProject;
+
+    private List<DataRow> dataRowsOfSelectedProject;
+    private List<DataColumn> dataColumnsOfSelectedProject;
+    private List<DataValue> dataValuesOfSelectedProject;
+    private Map<String, DataValue> dataValuesMapOfSelectedProject;
+    private List<ColumnModel> dataColumnModelssOfSelectedProject;
+
     private List<DataRow> dataRowsOfSelectedDataSource;
     private List<DataColumn> dataColumnsOfSelectedDataSource;
     private List<DataValue> dataValuesOfSelectedDataSource;
     private Map<String, DataValue> dataValuesMapOfSelectedDataSource;
-
-    private List<DataColumn> dataColumnsOfSelectedProject;
-
     private List<ColumnModel> dataColumnModelssOfSelectedDataSource;
 
     /**
@@ -142,6 +147,13 @@ public class DataMergeController implements Serializable {
         fillDataValuesForSelectedDataSource();
     }
 
+    public void fillDataForSelectedProject() {
+        createColumnsForSelectedProject();
+        createColumnModelForSelectedProject();
+        createRowsForSelectedProject();
+        fillDataValuesForSelectedProject();
+    }
+
     public String toUploadNewFile() {
         selectedDataSource = null;
         selectedProject = null;
@@ -165,6 +177,15 @@ public class DataMergeController implements Serializable {
         return "/dataMerge/upload_file";
     }
 
+    public String toComplieAllData() {
+        if (selectedProject == null) {
+            JsfUtil.addErrorMessage("Select a Project");
+            return "";
+        }
+        fillDataForSelectedProject();
+        return "/dataMerge/project_all_data";
+    }
+
     public void fillDataSourcesOfSelectedProject() {
         String j = "select ds from DataSource ds "
                 + " where ds.retired=:ret "
@@ -184,7 +205,7 @@ public class DataMergeController implements Serializable {
         Map m = new HashMap();
         m.put("ret", false);
         m.put("pro", selectedProject);
-        dataColumnsOfSelectedProject = getDataColumnFacade().findByJpql(j, m);
+        dataColumnsMasterOfSelectedProject = getDataColumnFacade().findByJpql(j, m);
     }
 
     public Project createAndSaveANewProject() {
@@ -402,6 +423,26 @@ public class DataMergeController implements Serializable {
             }
 
         }
+
+        j = "select c from DataColumn c "
+                + " where c.retired=:ret "
+                + " and c.project=:pro "
+                + " order by c.orderNo";
+        m = new HashMap();
+        m.put("ret", false);
+        m.put("pro", selectedProject);
+        pcs = getDataColumnFacade().findByJpql(j, m);
+
+        int count = 0;
+
+        for (DataColumn pCol : pcs) {
+
+            pCol.setOrderNo(count);
+            getDataColumnFacade().edit(pCol);
+            count ++;
+
+        }
+
     }
 
     /**
@@ -435,12 +476,10 @@ public class DataMergeController implements Serializable {
             boolean isShortText = false;
             boolean isLongText = true;
             isInt = isInteger(dvs);
-            System.out.println("isInt = " + isInt);
             if (isInt) {
                 c.setDataType(DataType.Integer_Number);
             } else {
                 isReal = isReal(dvs);
-                System.out.println("isReal = " + isReal);
                 if (isReal) {
                     c.setDataType(DataType.Real_Number);
                 } else {
@@ -485,11 +524,28 @@ public class DataMergeController implements Serializable {
         dataColumnsOfSelectedDataSource = getDataColumnFacade().findByJpql(j, m);
     }
 
+    public void createColumnsForSelectedProject() {
+        String j = "select c from DataColumn c "
+                + " where c.project=:dc "
+                + " order by c.orderNo";
+        Map m = new HashMap();
+        m.put("dc", selectedProject);
+        dataColumnsOfSelectedProject = getDataColumnFacade().findByJpql(j, m);
+    }
+
     public void createColumnModelForSelectedDataSource() {
         dataColumnModelssOfSelectedDataSource = new ArrayList<>();
         for (DataColumn dc : dataColumnsOfSelectedDataSource) {
             ColumnModel cm = new ColumnModel(dc.getName(), dc.getName());
             dataColumnModelssOfSelectedDataSource.add(cm);
+        }
+    }
+
+    public void createColumnModelForSelectedProject() {
+        dataColumnModelssOfSelectedProject = new ArrayList<>();
+        for (DataColumn dc : dataColumnsOfSelectedProject) {
+            ColumnModel cm = new ColumnModel(dc.getName(), dc.getName());
+            dataColumnModelssOfSelectedProject.add(cm);
         }
     }
 
@@ -500,6 +556,15 @@ public class DataMergeController implements Serializable {
         Map m = new HashMap();
         m.put("dc", selectedDataSource);
         dataRowsOfSelectedDataSource = getDataRowFacade().findByJpql(j, m);
+    }
+
+    public void createRowsForSelectedProject() {
+        String j = "select c from DataRow c "
+                + " where c.dataSource.project=:dc "
+                + " order by c.dataSource.project.id, c.orderNo";
+        Map m = new HashMap();
+        m.put("dc", selectedProject);
+        dataRowsOfSelectedProject = getDataRowFacade().findByJpql(j, m);
     }
 
     public void fillDataValuesForSelectedDataSource() {
@@ -517,15 +582,52 @@ public class DataMergeController implements Serializable {
         }
     }
 
+    public void fillDataValuesForSelectedProject() {
+
+        Long l = 0l;
+        dataValuesMapOfSelectedProject = new HashedMap<String, DataValue>();
+
+        for (DataRow pdr : dataRowsOfSelectedProject) {
+
+            String j = "select c from DataValue c "
+                    + " where c.dataRow=:dc "
+                    + " order by c.dataSource.project.id, c.dataRow.orderNo";
+            Map m = new HashMap();
+            m.put("dc", pdr);
+            dataValuesOfSelectedProject = getDataValueFacade().findByJpql(j, m);
+
+            for (DataValue dv : dataValuesOfSelectedProject) {
+                if (dv.getDataColumn().getReferance() != null) {
+                    String cr = dv.getDataColumn().getReferance().getOrderNo()
+                            + ","
+                            + l;
+                    dataValuesMapOfSelectedProject.put(cr, dv);
+                }
+
+            }
+            l++;
+
+        }
+
+    }
+
     public String uploadedValueOfSelectedDataSource(int col, int row) {
-        System.out.println("row = " + row);
-        System.out.println("col = " + col);
+
         String cr = col + "," + row;
         DataValue dv = dataValuesMapOfSelectedDataSource.get(cr);
-        System.out.println("dv = " + dv);
         if (dv == null) {
             return "";
         }
+        return dv.getUploadValue();
+    }
+
+    public String uploadedValueOfSelectedProject(int col, int row) {
+        String cr = col + "," + row;
+        DataValue dv = dataValuesMapOfSelectedProject.get(cr);
+        if (dv == null) {
+            return "";
+        }
+
         return dv.getUploadValue();
     }
 
@@ -697,12 +799,12 @@ public class DataMergeController implements Serializable {
         this.myProjects = myProjects;
     }
 
-    public List<DataColumn> getDataColumnsOfSelectedProject() {
-        return dataColumnsOfSelectedProject;
+    public List<DataColumn> getDataColumnsMasterOfSelectedProject() {
+        return dataColumnsMasterOfSelectedProject;
     }
 
-    public void setDataColumnsOfSelectedProject(List<DataColumn> dataColumnsOfSelectedProject) {
-        this.dataColumnsOfSelectedProject = dataColumnsOfSelectedProject;
+    public void setDataColumnsMasterOfSelectedProject(List<DataColumn> dataColumnsMasterOfSelectedProject) {
+        this.dataColumnsMasterOfSelectedProject = dataColumnsMasterOfSelectedProject;
     }
 
     public void updateDataColumn(DataColumn col) {
@@ -729,6 +831,46 @@ public class DataMergeController implements Serializable {
 
     public void updateProject(Project pro) {
         getProjectFacade().edit(pro);
+    }
+
+    public List<DataRow> getDataRowsOfSelectedProject() {
+        return dataRowsOfSelectedProject;
+    }
+
+    public void setDataRowsOfSelectedProject(List<DataRow> dataRowsOfSelectedProject) {
+        this.dataRowsOfSelectedProject = dataRowsOfSelectedProject;
+    }
+
+    public List<DataColumn> getDataColumnsOfSelectedProject() {
+        return dataColumnsOfSelectedProject;
+    }
+
+    public void setDataColumnsOfSelectedProject(List<DataColumn> dataColumnsOfSelectedProject) {
+        this.dataColumnsOfSelectedProject = dataColumnsOfSelectedProject;
+    }
+
+    public List<DataValue> getDataValuesOfSelectedProject() {
+        return dataValuesOfSelectedProject;
+    }
+
+    public void setDataValuesOfSelectedProject(List<DataValue> dataValuesOfSelectedProject) {
+        this.dataValuesOfSelectedProject = dataValuesOfSelectedProject;
+    }
+
+    public Map<String, DataValue> getDataValuesMapOfSelectedProject() {
+        return dataValuesMapOfSelectedProject;
+    }
+
+    public void setDataValuesMapOfSelectedProject(Map<String, DataValue> dataValuesMapOfSelectedProject) {
+        this.dataValuesMapOfSelectedProject = dataValuesMapOfSelectedProject;
+    }
+
+    public List<ColumnModel> getDataColumnModelssOfSelectedProject() {
+        return dataColumnModelssOfSelectedProject;
+    }
+
+    public void setDataColumnModelssOfSelectedProject(List<ColumnModel> dataColumnModelssOfSelectedProject) {
+        this.dataColumnModelssOfSelectedProject = dataColumnModelssOfSelectedProject;
     }
 
     static public class ColumnModel implements Serializable {

@@ -22,14 +22,20 @@
                         <p:outputLabel value="#{dataMergeController.selectedProject.name}" >
                         </p:outputLabel>
 
-                        <p:outputLabel value="Name" ></p:outputLabel>
+                        <p:outputLabel value="" ></p:outputLabel>
                         <p:commandButton ajax="false" value="Upload Another File" action="#{dataMergeController.toAddANewDataSourceForTheProject()}" >
+                        </p:commandButton>
+                        
+                        
+                        <p:outputLabel value="" ></p:outputLabel>
+                        <p:commandButton ajax="false" value="Compile All Data" 
+                                         action="#{dataMergeController.toComplieAllData()}" >
                         </p:commandButton>
                         
                     </p:panelGrid>
                     
                     
-                    <p:dataTable value="#{dataMergeController.dataColumnsOfSelectedProject}" var="c" >
+                    <p:dataTable value="#{dataMergeController.dataColumnsMasterOfSelectedProject}" var="c" >
                         <p:column headerText="Column Name" >
                             <p:outputLabel value="#{c.name}"  >
                             </p:outputLabel>

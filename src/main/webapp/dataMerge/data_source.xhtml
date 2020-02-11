@@ -35,7 +35,11 @@
 
                     <p:commandButton ajax="false" value="Update" action="#{dataMergeController.updateDataColumnOfSelectedDataSource}" ></p:commandButton>
 
-                    <p:dataTable value="#{dataMergeController.dataColumnsOfSelectedDataSource}" var="c" >
+                    <p:dataTable value="#{dataMergeController.dataColumnsOfSelectedDataSource}" var="c" 
+
+
+
+                                 >
                         <p:column headerText="Name">
                             <p:outputLabel value="#{c.name}" ></p:outputLabel>
                         </p:column>
@@ -45,7 +49,7 @@
                         <p:column headerText="Rererance">
                             <p:selectOneMenu id="cmbRef" value="#{c.referance}" >
                                 <f:selectItem itemLabel="Please select" ></f:selectItem>
-                                <f:selectItems value="#{dataMergeController.dataColumnsOfSelectedProject}"
+                                <f:selectItems value="#{dataMergeController.dataColumnsMasterOfSelectedProject}"
                                                var="pc" itemLabel="#{pc.name}" itemValue="#{pc}" ></f:selectItems>
                                 <p:ajax event="change" process="cmbRef"  ></p:ajax>
                             </p:selectOneMenu>
@@ -54,7 +58,14 @@
 
                     <p:dataTable id="tbl" var="car" 
                                  value="#{dataMergeController.dataRowsOfSelectedDataSource}"
-                                 rowIndexVar="rowIndex"> 
+                                 rowIndexVar="rowIndex"
+
+                                 rows="10"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,50,100,250"
+
+                                 > 
 
                         <p:columns value="#{dataMergeController.dataColumnModelssOfSelectedDataSource}"
                                    var="column" 
