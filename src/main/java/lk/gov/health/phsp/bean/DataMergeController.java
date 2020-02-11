@@ -650,6 +650,15 @@ public class DataMergeController implements Serializable {
 
         return dv.getUploadValue();
     }
+    
+    public String uploadedValueOfSelectedProjectFileName(int row) {
+        String cr = "0," + row;
+        DataValue dv = dataValuesMapOfSelectedProject.get(cr);
+        if (dv == null) {
+            return "";
+        }
+        return dv.getDataSource().getFileName();
+    }
 
     public Project getSelectedProject() {
         return selectedProject;
