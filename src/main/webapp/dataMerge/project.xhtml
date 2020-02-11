@@ -28,6 +28,18 @@
                         
                     </p:panelGrid>
                     
+                    
+                    <p:dataTable value="#{dataMergeController.dataColumnsOfSelectedProject}" var="c" >
+                        <p:column headerText="Column Name" >
+                            <p:outputLabel value="#{c.name}"  >
+                            </p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Data Type" >
+                            <p:outputLabel value="#{c.dataType}"  >
+                            </p:outputLabel>
+                        </p:column>
+                    </p:dataTable>
+                    
                     <p:dataTable value="#{dataMergeController.dataSourcesOfSelectedProject}" var="ds" >
                         <p:column headerText="File Name" >
                             <p:commandLink value="#{ds.name}" ajax="false" action="#{dataMergeController.toViewSelectedDatasource()}" >

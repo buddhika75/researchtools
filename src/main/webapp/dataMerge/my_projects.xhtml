@@ -29,6 +29,11 @@
                                 <f:setPropertyActionListener value="#{p}" target="#{dataMergeController.selectedProject}" ></f:setPropertyActionListener>
                             </p:commandLink>
                         </p:column>
+                        <p:column headerText="Created At" >
+                            <p:outputLabel value="#{p.createdAt}" >
+                                <f:convertDateTime pattern="dd MMMM yyyy hh:mm a" ></f:convertDateTime>
+                            </p:outputLabel>
+                        </p:column>
                     </p:dataTable>
                     
                 </h:form>

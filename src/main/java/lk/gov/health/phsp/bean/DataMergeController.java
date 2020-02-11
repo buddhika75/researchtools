@@ -98,6 +98,8 @@ public class DataMergeController implements Serializable {
     private List<DataValue> dataValuesOfSelectedDataSource;
     private Map<String, DataValue> dataValuesMapOfSelectedDataSource;
 
+    private List<DataColumn> dataColumnsOfSelectedProject;
+
     private List<ColumnModel> dataColumnModelssOfSelectedDataSource;
 
     /**
@@ -112,6 +114,7 @@ public class DataMergeController implements Serializable {
             return "";
         }
         fillDataSourcesOfSelectedProject();
+        fillDataColumnsOfSelectedProject();
         return "/dataMerge/project";
     }
 
@@ -171,6 +174,17 @@ public class DataMergeController implements Serializable {
         m.put("ret", false);
         m.put("pro", selectedProject);
         dataSourcesOfSelectedProject = getDataSourceFacade().findByJpql(j, m);
+    }
+
+    public void fillDataColumnsOfSelectedProject() {
+        String j = "select ds from DataColumn ds "
+                + " where ds.retired=:ret "
+                + " and ds.project=:pro"
+                + " order by ds.orderNo";
+        Map m = new HashMap();
+        m.put("ret", false);
+        m.put("pro", selectedProject);
+        dataColumnsOfSelectedProject = getDataColumnFacade().findByJpql(j, m);
     }
 
     public Project createAndSaveANewProject() {
@@ -329,7 +343,7 @@ public class DataMergeController implements Serializable {
                 JsfUtil.addSuccessMessage("Succesful. All the data in Excel File Impoted to the database");
                 fillDataForSelectedDatasource();
                 identifyDataTypesOfColumnsOfSelectedDataSource();
-
+                updateProjectColumns();
                 return toViewSelectedDatasourceWithoutFillingData();
 
             } catch (IOException ex) {
@@ -344,6 +358,64 @@ public class DataMergeController implements Serializable {
         }
     }
 
+    public void updateProjectColumns() {
+        String j = "select c from DataColumn c "
+                + " where c.retired=:ret "
+                + " and c.project=:pro "
+                + " order by c.orderNo";
+        Map m = new HashMap();
+        m.put("ret", false);
+        m.put("pro", selectedProject);
+        List<DataColumn> pcs = getDataColumnFacade().findByJpql(j, m);
+        for (DataColumn dsCol : dataColumnsOfSelectedDataSource) {
+            boolean suitableColumnFound = false;
+            boolean nameIsExactlyTheSame = false;
+            boolean dataTypeIsSimilar = false;
+            for (DataColumn pCol : pcs) {
+                if (dsCol.getName().equalsIgnoreCase(pCol.getName())) {
+                    nameIsExactlyTheSame = true;
+                }
+                if (dsCol.getDataType().equals(pCol.getDataType())) {
+                    dataTypeIsSimilar = true;
+                }
+
+                //TODO: Add More Logic
+                if (nameIsExactlyTheSame && dataTypeIsSimilar) {
+                    suitableColumnFound = true;
+                    dsCol.setReferance(pCol);
+                    getDataColumnFacade().edit(dsCol);
+                }
+
+            }
+
+            if (!suitableColumnFound) {
+                DataColumn newPCol = new DataColumn();
+                newPCol.setDataType(dsCol.getDataType());
+                newPCol.setCreatedAt(new Date());
+                newPCol.setCreatedBy(webUserController.getLoggedUser());
+                newPCol.setName(dsCol.getName());
+                newPCol.setProject(selectedProject);
+                getDataColumnFacade().create(newPCol);
+
+                dsCol.setReferance(newPCol);
+                getDataColumnFacade().edit(dsCol);
+            }
+
+        }
+    }
+
+    /**
+     *
+     *
+     * To Do
+     *
+     * Check Date
+     * http://regexlib.com/DisplayPatterns.aspx?cattabindex=4&categoryid=5&p=7
+     *
+     * Check Similarity in Names
+     * https://stackoverflow.com/questions/955110/similarity-string-comparison-in-java
+     *
+     */
     public void identifyDataTypesOfColumnsOfSelectedDataSource() {
         if (selectedDataSource == null) {
             JsfUtil.addErrorMessage("No Datasource");
@@ -623,6 +695,40 @@ public class DataMergeController implements Serializable {
 
     public void setMyProjects(List<Project> myProjects) {
         this.myProjects = myProjects;
+    }
+
+    public List<DataColumn> getDataColumnsOfSelectedProject() {
+        return dataColumnsOfSelectedProject;
+    }
+
+    public void setDataColumnsOfSelectedProject(List<DataColumn> dataColumnsOfSelectedProject) {
+        this.dataColumnsOfSelectedProject = dataColumnsOfSelectedProject;
+    }
+
+    public void updateDataColumn(DataColumn col) {
+        getDataColumnFacade().edit(col);
+    }
+
+    public void updateDataColumnOfSelectedDataSource() {
+        for (DataColumn col : dataColumnsOfSelectedDataSource) {
+            getDataColumnFacade().edit(col);
+        }
+    }
+
+    public void updateDataRow(DataRow row) {
+        getDataRowFacade().edit(row);
+    }
+
+    public void updateDataValue(DataValue val) {
+        getDataValueFacade().edit(val);
+    }
+
+    public void updateDataSource(DataSource ds) {
+        getDataSourceFacade().edit(ds);
+    }
+
+    public void updateProject(Project pro) {
+        getProjectFacade().edit(pro);
     }
 
     static public class ColumnModel implements Serializable {
