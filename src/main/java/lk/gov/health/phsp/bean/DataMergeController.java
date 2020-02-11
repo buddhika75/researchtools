@@ -107,13 +107,67 @@ public class DataMergeController implements Serializable {
     private List<DataValue> dataValuesOfSelectedDataSource;
     private Map<String, DataValue> dataValuesMapOfSelectedDataSource;
     private List<ColumnModel> dataColumnModelssOfSelectedDataSource;
+    
+    private DataSource removingDataSource;
+    private DataRow removingDataRow;
+    private DataColumn removingDataColumn;
+    private Project removingProject;
 
     /**
      * Creates a new instance of DataMerge
      */
     public DataMergeController() {
     }
+    
+    public String removeProject(){
+        if(removingProject==null){
+            JsfUtil.addErrorMessage("Please Select");
+            return "";
+        }
+        removingProject.setRetired(true);
+        removingProject.setRetiredBy(webUserController.getLoggedUser());
+        removingProject.setRetiredAt(new Date());
+        getProjectFacade().edit(removingProject);
+        removingProject=null;
+        return toViewMyProjects();
+    }
+    
+    public void removeDataColumn(){
+        if(removingDataColumn==null){
+            JsfUtil.addErrorMessage("Please Select");
+            return;
+        }
+        removingDataColumn.setRetired(true);
+        removingDataColumn.setRetiredBy(webUserController.getLoggedUser());
+        removingDataColumn.setRetiredAt(new Date());
+        getDataColumnFacade().edit(removingDataColumn);
+        removingDataColumn = null;
+    }
+    
+    public void removeDataRow(){
+        if(removingDataRow==null){
+            JsfUtil.addErrorMessage("Please Select");
+            return;
+        }
+        removingDataRow.setRetired(true);
+        removingDataRow.setRetiredBy(webUserController.getLoggedUser());
+        removingDataRow.setRetiredAt(new Date());
+        getDataRowFacade().edit(removingDataRow);
+        removingDataRow = null;
+    }
 
+    public void removeDataSource(){
+        if(removingDataSource==null){
+            JsfUtil.addErrorMessage("Please Select");
+            return;
+        }
+        removingDataSource.setRetired(true);
+        removingDataSource.setRetiredBy(webUserController.getLoggedUser());
+        removingDataSource.setRetiredAt(new Date());
+        getDataSourceFacade().edit(removingDataSource);
+        removingDataSource=null;
+    }
+    
     public String toViewSelectedProject() {
         if (selectedProject == null) {
             JsfUtil.addErrorMessage("Please select a project");
@@ -156,6 +210,7 @@ public class DataMergeController implements Serializable {
         fillDataValuesForSelectedProject();
     }
 
+    
     public String toUploadNewFile() {
         selectedDataSource = null;
         selectedProject = null;
@@ -662,13 +717,7 @@ public class DataMergeController implements Serializable {
         return dv.getDataSource().getFileName();
     }
 
-    public Project getSelectedProject() {
-        return selectedProject;
-    }
-
-    public void setSelectedProject(Project selectedProject) {
-        this.selectedProject = selectedProject;
-    }
+   
 
     public DataSource getSelectedDataSource() {
         return selectedDataSource;
@@ -911,6 +960,48 @@ public class DataMergeController implements Serializable {
     public void setCreateNewMasterCols(boolean createNewMasterCols) {
         this.createNewMasterCols = createNewMasterCols;
     }
+
+    public DataSource getRemovingDataSource() {
+        return removingDataSource;
+    }
+
+    public void setRemovingDataSource(DataSource removingDataSource) {
+        this.removingDataSource = removingDataSource;
+    }
+
+    public DataRow getRemovingDataRow() {
+        return removingDataRow;
+    }
+
+    public void setRemovingDataRow(DataRow removingDataRow) {
+        this.removingDataRow = removingDataRow;
+    }
+
+    public DataColumn getRemovingDataColumn() {
+        return removingDataColumn;
+    }
+
+    public void setRemovingDataColumn(DataColumn removingDataColumn) {
+        this.removingDataColumn = removingDataColumn;
+    }
+
+    public Project getRemovingProject() {
+        return removingProject;
+    }
+
+    public void setRemovingProject(Project removingProject) {
+        this.removingProject = removingProject;
+    }
+
+    public Project getSelectedProject() {
+        return selectedProject;
+    }
+
+    public void setSelectedProject(Project selectedProject) {
+        this.selectedProject = selectedProject;
+    }
+    
+    
 
     static public class ColumnModel implements Serializable {
 

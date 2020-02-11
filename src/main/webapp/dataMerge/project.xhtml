@@ -13,46 +13,86 @@
             <ui:define name="content">
 
                 <h:form  >
-                    <p:panelGrid columns="2" >
-                         <f:facet name="header" >
+                    <p:panel >
+
+                        <f:facet name="header" >
                             <p:outputLabel value="#{dataMergeController.selectedProject.name}" ></p:outputLabel>
                         </f:facet>
-                        
-                        <p:outputLabel value="Name" ></p:outputLabel>
-                        <p:outputLabel value="#{dataMergeController.selectedProject.name}" >
-                        </p:outputLabel>
 
-                        <p:outputLabel value="" ></p:outputLabel>
-                        <p:commandButton ajax="false" value="Upload Another File" action="#{dataMergeController.toAddANewDataSourceForTheProject()}" >
-                        </p:commandButton>
-                        
-                        
-                        <p:outputLabel value="" ></p:outputLabel>
-                        <p:commandButton ajax="false" value="Compile All Data" 
-                                         action="#{dataMergeController.toComplieAllData()}" >
-                        </p:commandButton>
-                        
-                    </p:panelGrid>
-                    
-                    
-                    <p:dataTable value="#{dataMergeController.dataColumnsMasterOfSelectedProject}" var="c" >
-                        <p:column headerText="Column Name" >
-                            <p:outputLabel value="#{c.name}"  >
-                            </p:outputLabel>
-                        </p:column>
-                        <p:column headerText="Data Type" >
-                            <p:outputLabel value="#{c.dataType}"  >
-                            </p:outputLabel>
-                        </p:column>
-                    </p:dataTable>
-                    
-                    <p:dataTable value="#{dataMergeController.dataSourcesOfSelectedProject}" var="ds" >
-                        <p:column headerText="File Name" >
-                            <p:commandLink value="#{ds.name}" ajax="false" action="#{dataMergeController.toViewSelectedDatasource()}" >
-                                <f:setPropertyActionListener value="#{ds}" target="#{dataMergeController.selectedDataSource}" ></f:setPropertyActionListener>
-                            </p:commandLink>
-                        </p:column>
-                    </p:dataTable>
+
+
+
+                        <p:panelGrid columns="2" >
+                            <p:outputLabel value="Name" ></p:outputLabel>
+                            <p:inputText value="#{dataMergeController.selectedProject.name}" >
+                                <f:ajax event="blur" execute="@this" listener="#{dataMergeController.updateProject(dataMergeController.selectedProject)}" ></f:ajax>
+                            </p:inputText>
+                            <p:outputLabel value="Details" ></p:outputLabel>
+                            <p:inputTextarea value="#{dataMergeController.selectedProject.description}" >
+                                <f:ajax event="blur" execute="@this" listener="#{dataMergeController.updateProject(dataMergeController.selectedProject)}" ></f:ajax>
+                            </p:inputTextarea>
+                        </p:panelGrid>
+
+
+
+                        <p:panelGrid columns="3" >
+                            <p:commandButton ajax="false" value="Back to My Projects" 
+                                             action="#{dataMergeController.toViewMyProjects()}" >
+                            </p:commandButton>
+                            <p:commandButton ajax="false" value="Upload Another File" action="#{dataMergeController.toAddANewDataSourceForTheProject()}" >
+                            </p:commandButton>
+                            <p:commandButton ajax="false" value="Compile All Data" 
+                                             action="#{dataMergeController.toComplieAllData()}" >
+                            </p:commandButton>
+                        </p:panelGrid>
+
+                        <p:tabView >
+                            <p:tab title="Files" >
+                                <p:dataTable value="#{dataMergeController.dataSourcesOfSelectedProject}" var="ds" >
+                                    <p:column headerText="File Name" >
+                                        <p:outputLabel value="#{ds.name}"  >
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="Uploaded At" >
+                                        <p:outputLabel value="#{ds.createdAt}"  >
+                                            <f:convertDateTime pattern="dd MMMM yyyy hh:mm a" ></f:convertDateTime>
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="Actions">
+                                        <p:commandLink value="View" ajax="false" action="#{dataMergeController.toViewSelectedDatasource()}" >
+                                            <f:setPropertyActionListener value="#{ds}" target="#{dataMergeController.selectedDataSource}" ></f:setPropertyActionListener>
+                                        </p:commandLink>
+                                        <p:spacer height="1" width="10" ></p:spacer>
+                                        <p:commandLink value="Remove" ajax="false"
+                                                        onclick="if (!confirm('Are you sure?')) return false;" 
+                                                       action="#{dataMergeController.toViewSelectedProject()}" actionListener="#{dataMergeController.removeDataSource()}" >
+                                            <f:setPropertyActionListener value="#{ds}" target="#{dataMergeController.removingDataSource}" ></f:setPropertyActionListener>
+                                        </p:commandLink>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:tab>
+                            <p:tab title="Project Columns" >
+                                <p:dataTable value="#{dataMergeController.dataColumnsMasterOfSelectedProject}" var="c" >
+                                    <p:column headerText="Column Name" >
+                                        <p:outputLabel value="#{c.name}"  >
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="Data Type" >
+                                        <p:outputLabel value="#{c.dataType}"  >
+                                        </p:outputLabel>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:tab>
+
+                        </p:tabView>
+
+
+
+
+
+
+                    </p:panel>
+
 
                 </h:form>
 

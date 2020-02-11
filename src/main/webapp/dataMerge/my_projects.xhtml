@@ -13,29 +13,42 @@
             <ui:define name="content">
 
                 <h:form  >
-                    <p:panelGrid columns="2" >
-                         <f:facet name="header" >
-                            <p:outputLabel value="My Projects" ></p:outputLabel>
-                        </f:facet>
-                        
-                        <p:outputLabel value="Institution" ></p:outputLabel>
-                        <p:outputLabel value="#{webUserController.loggedUser.institution.name}" ></p:outputLabel>
-                        
-                    </p:panelGrid>
 
-                    <p:dataTable value="#{dataMergeController.myProjects}" var="p" >
-                        <p:column headerText="Name" >
-                            <p:commandLink value="#{p.name}" ajax="false" action="#{dataMergeController.toViewSelectedProject()}">
-                                <f:setPropertyActionListener value="#{p}" target="#{dataMergeController.selectedProject}" ></f:setPropertyActionListener>
-                            </p:commandLink>
-                        </p:column>
-                        <p:column headerText="Created At" >
-                            <p:outputLabel value="#{p.createdAt}" >
-                                <f:convertDateTime pattern="dd MMMM yyyy hh:mm a" ></f:convertDateTime>
-                            </p:outputLabel>
-                        </p:column>
-                    </p:dataTable>
-                    
+                    <p:panel header="My Projects" >
+
+                        <p:dataTable value="#{dataMergeController.myProjects}" var="p" rowIndexVar="n" 
+                                     rowKey="#{p.id}"  >
+                            <p:column headerText="Name" sortBy="#{p.name}"
+                                      filterBy="#{p.name}" 
+                                      filterMatchMode="contains">
+                                <p:outputLabel id="txtName" value="#{p.name}" >
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Details" >
+                                <p:outputLabel value="#{p.description}" >
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Created At" >
+                                <p:outputLabel value="#{p.createdAt}" >
+                                    <f:convertDateTime pattern="dd MMMM yyyy hh:mm a" ></f:convertDateTime>
+                                </p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Actions" >
+                                <p:commandLink value="View" ajax="false" action="#{dataMergeController.toViewSelectedProject()}" >
+                                    <f:setPropertyActionListener value="#{p}" target="#{dataMergeController.selectedProject}"></f:setPropertyActionListener>
+                                </p:commandLink>
+                                <p:spacer height="1" width="10" ></p:spacer>
+                                <p:commandLink value="Remove" ajax="false" action="#{dataMergeController.removeProject()}"
+                                              onclick="if (!confirm('Are you sure?')) return false;"    >
+                                    <f:setPropertyActionListener value="#{p}" target="#{dataMergeController.removingProject}"></f:setPropertyActionListener>
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+
+                    </p:panel>
+
+
+
                 </h:form>
 
 
