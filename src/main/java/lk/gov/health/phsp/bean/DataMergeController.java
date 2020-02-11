@@ -88,6 +88,7 @@ public class DataMergeController implements Serializable {
     private Integer dataEndRow = null;
     private Integer dataEndColumn = null;
     private Project selectedProject;
+    private boolean createNewMasterCols = false;
     private DataSource selectedDataSource;
 
     private List<DataSource> dataSourcesOfSelectedProject;
@@ -363,15 +364,14 @@ public class DataMergeController implements Serializable {
                 }
 
                 JsfUtil.addSuccessMessage("Succesful. All the data in Excel File Impoted to the database");
-                
-                
+
                 fillDataForSelectedDatasource();
                 identifyDataTypesOfColumnsOfSelectedDataSource();
-                
+
                 updateProjectColumns();
-                
+
                 fillMasterDataColumnsOfSelectedProject();
-                
+
                 return toViewSelectedDatasourceWithoutFillingData();
 
             } catch (IOException ex) {
@@ -402,11 +402,10 @@ public class DataMergeController implements Serializable {
             boolean suitableColumnFound = false;
             boolean nameIsExactlyTheSame = false;
             boolean dataTypeIsSimilar = false;
-            
+
             for (DataColumn pCol : pcs) {
-                
-                
-                System.out.println("pCol = " + pCol);
+
+                System.out.println("pCol = " + pCol.getName());
                 if (dsCol.getName().equalsIgnoreCase(pCol.getName())) {
                     nameIsExactlyTheSame = true;
                 }
@@ -416,7 +415,7 @@ public class DataMergeController implements Serializable {
 
                 System.out.println("nameIsExactlyTheSame = " + nameIsExactlyTheSame);
                 System.out.println("dataTypeIsSimilar = " + dataTypeIsSimilar);
-                
+
                 //TODO: Add More Logic
                 if (nameIsExactlyTheSame && dataTypeIsSimilar) {
                     suitableColumnFound = true;
@@ -426,20 +425,23 @@ public class DataMergeController implements Serializable {
                 }
 
             }
-            
+
             System.out.println("suitableColumnFound = " + suitableColumnFound);
 
-            if (!suitableColumnFound) {
-                DataColumn newPCol = new DataColumn();
-                newPCol.setDataType(dsCol.getDataType());
-                newPCol.setCreatedAt(new Date());
-                newPCol.setCreatedBy(webUserController.getLoggedUser());
-                newPCol.setName(dsCol.getName());
-                newPCol.setProject(selectedProject);
-                getDataColumnFacade().create(newPCol);
+            if (createNewMasterCols) {
 
-                dsCol.setReferance(newPCol);
-                getDataColumnFacade().edit(dsCol);
+                if (!suitableColumnFound) {
+                    DataColumn newPCol = new DataColumn();
+                    newPCol.setDataType(dsCol.getDataType());
+                    newPCol.setCreatedAt(new Date());
+                    newPCol.setCreatedBy(webUserController.getLoggedUser());
+                    newPCol.setName(dsCol.getName());
+                    newPCol.setProject(selectedProject);
+                    getDataColumnFacade().create(newPCol);
+
+                    dsCol.setReferance(newPCol);
+                    getDataColumnFacade().edit(dsCol);
+                }
             }
 
         }
@@ -459,7 +461,7 @@ public class DataMergeController implements Serializable {
 
             pCol.setOrderNo(count);
             getDataColumnFacade().edit(pCol);
-            count ++;
+            count++;
 
         }
 
@@ -650,7 +652,7 @@ public class DataMergeController implements Serializable {
 
         return dv.getUploadValue();
     }
-    
+
     public String uploadedValueOfSelectedProjectFileName(int row) {
         String cr = "0," + row;
         DataValue dv = dataValuesMapOfSelectedProject.get(cr);
@@ -900,6 +902,14 @@ public class DataMergeController implements Serializable {
 
     public void setDataColumnModelssOfSelectedProject(List<ColumnModel> dataColumnModelssOfSelectedProject) {
         this.dataColumnModelssOfSelectedProject = dataColumnModelssOfSelectedProject;
+    }
+
+    public boolean isCreateNewMasterCols() {
+        return createNewMasterCols;
+    }
+
+    public void setCreateNewMasterCols(boolean createNewMasterCols) {
+        this.createNewMasterCols = createNewMasterCols;
     }
 
     static public class ColumnModel implements Serializable {
