@@ -107,7 +107,7 @@ public class DataMergeController implements Serializable {
     private List<DataValue> dataValuesOfSelectedDataSource;
     private Map<String, DataValue> dataValuesMapOfSelectedDataSource;
     private List<ColumnModel> dataColumnModelssOfSelectedDataSource;
-    
+
     private DataSource removingDataSource;
     private DataRow removingDataRow;
     private DataColumn removingDataColumn;
@@ -118,9 +118,9 @@ public class DataMergeController implements Serializable {
      */
     public DataMergeController() {
     }
-    
-    public String removeProject(){
-        if(removingProject==null){
+
+    public String removeProject() {
+        if (removingProject == null) {
             JsfUtil.addErrorMessage("Please Select");
             return "";
         }
@@ -128,12 +128,12 @@ public class DataMergeController implements Serializable {
         removingProject.setRetiredBy(webUserController.getLoggedUser());
         removingProject.setRetiredAt(new Date());
         getProjectFacade().edit(removingProject);
-        removingProject=null;
+        removingProject = null;
         return toViewMyProjects();
     }
-    
-    public void removeDataColumn(){
-        if(removingDataColumn==null){
+
+    public void removeDataColumn() {
+        if (removingDataColumn == null) {
             JsfUtil.addErrorMessage("Please Select");
             return;
         }
@@ -144,9 +144,9 @@ public class DataMergeController implements Serializable {
         removingDataColumn = null;
         fillMasterDataColumnsOfSelectedProject();
     }
-    
-    public void removeDataRow(){
-        if(removingDataRow==null){
+
+    public void removeDataRow() {
+        if (removingDataRow == null) {
             JsfUtil.addErrorMessage("Please Select");
             return;
         }
@@ -157,8 +157,8 @@ public class DataMergeController implements Serializable {
         removingDataRow = null;
     }
 
-    public void removeDataSource(){
-        if(removingDataSource==null){
+    public void removeDataSource() {
+        if (removingDataSource == null) {
             JsfUtil.addErrorMessage("Please Select");
             return;
         }
@@ -166,9 +166,9 @@ public class DataMergeController implements Serializable {
         removingDataSource.setRetiredBy(webUserController.getLoggedUser());
         removingDataSource.setRetiredAt(new Date());
         getDataSourceFacade().edit(removingDataSource);
-        removingDataSource=null;
+        removingDataSource = null;
     }
-    
+
     public String toViewSelectedProject() {
         if (selectedProject == null) {
             JsfUtil.addErrorMessage("Please select a project");
@@ -211,7 +211,6 @@ public class DataMergeController implements Serializable {
         fillDataValuesForSelectedProject();
     }
 
-    
     public String toUploadNewFile() {
         selectedDataSource = null;
         selectedProject = null;
@@ -428,6 +427,8 @@ public class DataMergeController implements Serializable {
 
                 fillMasterDataColumnsOfSelectedProject();
 
+                resetUploadFileDate();
+
                 return toViewSelectedDatasourceWithoutFillingData();
 
             } catch (IOException ex) {
@@ -440,6 +441,14 @@ public class DataMergeController implements Serializable {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    public void resetUploadFileDate() {
+        dataStartRow = 1;
+        dataStartColumn = 0;
+        dataHeaderRow = 0;
+        dataEndRow = null;
+        dataEndColumn = null;
     }
 
     public void updateProjectColumns() {
@@ -717,8 +726,6 @@ public class DataMergeController implements Serializable {
         }
         return dv.getDataSource().getFileName();
     }
-
-   
 
     public DataSource getSelectedDataSource() {
         return selectedDataSource;
@@ -1001,8 +1008,6 @@ public class DataMergeController implements Serializable {
     public void setSelectedProject(Project selectedProject) {
         this.selectedProject = selectedProject;
     }
-    
-    
 
     static public class ColumnModel implements Serializable {
 
