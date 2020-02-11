@@ -142,6 +142,7 @@ public class DataMergeController implements Serializable {
         removingDataColumn.setRetiredAt(new Date());
         getDataColumnFacade().edit(removingDataColumn);
         removingDataColumn = null;
+        fillMasterDataColumnsOfSelectedProject();
     }
     
     public void removeDataRow(){

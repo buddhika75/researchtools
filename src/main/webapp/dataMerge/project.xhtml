@@ -72,7 +72,7 @@
                                 </p:dataTable>
                             </p:tab>
                             <p:tab title="Project Columns" >
-                                <p:dataTable value="#{dataMergeController.dataColumnsMasterOfSelectedProject}" var="c" >
+                                <p:dataTable id="cols" value="#{dataMergeController.dataColumnsMasterOfSelectedProject}" var="c" >
                                     <p:column headerText="Column Name" >
                                         <p:outputLabel value="#{c.name}"  >
                                         </p:outputLabel>
@@ -80,6 +80,16 @@
                                     <p:column headerText="Data Type" >
                                         <p:outputLabel value="#{c.dataType}"  >
                                         </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="Actions" >
+                                        <p:commandButton value="Remove" process="@this" update="cols" action="#{dataMergeController.removeDataColumn()}"
+                                                         onclick="if (!confirm('Are you sure?')) return false;"       >
+                                            <f:setPropertyActionListener value="#{c}" 
+                                                                         target="#{dataMergeController.removingDataColumn}"
+                                                                         
+                                                                         >
+                                            </f:setPropertyActionListener>
+                                        </p:commandButton>
                                     </p:column>
                                 </p:dataTable>
                             </p:tab>

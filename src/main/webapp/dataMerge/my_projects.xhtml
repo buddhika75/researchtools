@@ -18,9 +18,7 @@
 
                         <p:dataTable value="#{dataMergeController.myProjects}" var="p" rowIndexVar="n" 
                                      rowKey="#{p.id}"  >
-                            <p:column headerText="Name" sortBy="#{p.name}"
-                                      filterBy="#{p.name}" 
-                                      filterMatchMode="contains">
+                            <p:column headerText="Name" >
                                 <p:outputLabel id="txtName" value="#{p.name}" >
                                 </p:outputLabel>
                             </p:column>
