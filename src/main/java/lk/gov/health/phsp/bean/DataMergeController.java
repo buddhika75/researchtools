@@ -30,9 +30,11 @@ import java.io.InputStream;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
 import javax.inject.Inject;
@@ -46,6 +48,7 @@ import lk.gov.health.phsp.entity.DataSource;
 import lk.gov.health.phsp.entity.DataValue;
 import lk.gov.health.phsp.entity.Item;
 import lk.gov.health.phsp.entity.Project;
+import lk.gov.health.phsp.enums.DataType;
 import lk.gov.health.phsp.enums.ItemType;
 import lk.gov.health.phsp.facade.DataColumnFacade;
 import lk.gov.health.phsp.facade.DataRowFacade;
@@ -53,13 +56,14 @@ import lk.gov.health.phsp.facade.DataSourceFacade;
 import lk.gov.health.phsp.facade.DataValueFacade;
 import lk.gov.health.phsp.facade.ProjectFacade;
 import lk.gov.health.phsp.facade.util.JsfUtil;
+import org.apache.commons.collections4.map.HashedMap;
 import org.primefaces.model.UploadedFile;
 
 /**
  *
  * @author ari_soton_ac_uk
  */
-@Named(value = "dataMerge")
+@Named
 @SessionScoped
 public class DataMergeController implements Serializable {
 
@@ -86,15 +90,92 @@ public class DataMergeController implements Serializable {
     private Project selectedProject;
     private DataSource selectedDataSource;
 
+    private List<DataSource> dataSourcesOfSelectedProject;
+    private List<Project> myProjects;
+
+    private List<DataRow> dataRowsOfSelectedDataSource;
+    private List<DataColumn> dataColumnsOfSelectedDataSource;
+    private List<DataValue> dataValuesOfSelectedDataSource;
+    private Map<String, DataValue> dataValuesMapOfSelectedDataSource;
+
+    private List<ColumnModel> dataColumnModelssOfSelectedDataSource;
+
     /**
      * Creates a new instance of DataMerge
      */
     public DataMergeController() {
     }
 
+    public String toViewSelectedProject() {
+        if (selectedProject == null) {
+            JsfUtil.addErrorMessage("Please select a project");
+            return "";
+        }
+        fillDataSourcesOfSelectedProject();
+        return "/dataMerge/project";
+    }
+
+    public String toViewSelectedDatasource() {
+        if (selectedDataSource == null) {
+            JsfUtil.addErrorMessage("No datasource");
+            return "";
+        }
+        fillDataForSelectedDatasource();
+        return "/dataMerge/data_source";
+    }
+
+    public String toViewSelectedDatasourceWithoutFillingData() {
+        if (selectedDataSource == null) {
+            JsfUtil.addErrorMessage("No datasource");
+            return "";
+        }
+        return "/dataMerge/data_source";
+    }
+
+    public void fillDataForSelectedDatasource() {
+        createColumnsForSelectedDataSource();
+        createColumnModelForSelectedDataSource();
+        createRowsForSelectedDataSource();
+        fillDataValuesForSelectedDataSource();
+    }
+
+    public String toUploadNewFile() {
+        selectedDataSource = null;
+        selectedProject = null;
+        return "/dataMerge/upload_file";
+    }
+
+    public String toViewMyProjects() {
+        String j = "select p from Project p "
+                + " where p.retired=:ret "
+                + " and p.institution=:ins"
+                + " order by p.name";
+        Map m = new HashMap();
+        m.put("ret", false);
+        m.put("ins", webUserController.getLoggedUser().getInstitution());
+        myProjects = getProjectFacade().findByJpql(j, m);
+        return "/dataMerge/my_projects";
+    }
+
+    public String toAddANewDataSourceForTheProject() {
+        selectedDataSource = new DataSource();
+        return "/dataMerge/upload_file";
+    }
+
+    public void fillDataSourcesOfSelectedProject() {
+        String j = "select ds from DataSource ds "
+                + " where ds.retired=:ret "
+                + " and ds.project=:pro"
+                + " order by ds.name";
+        Map m = new HashMap();
+        m.put("ret", false);
+        m.put("pro", selectedProject);
+        dataSourcesOfSelectedProject = getDataSourceFacade().findByJpql(j, m);
+    }
+
     public Project createAndSaveANewProject() {
         Project p = new Project();
-        p.setInstitution(webUserController.getInstitution());
+        p.setInstitution(webUserController.getLoggedUser().getInstitution());
         p.setOwner(webUserController.getLoggedUser());
         p.setCreatedAt(new Date());
         p.setCreatedBy(webUserController.getLoggedUser());
@@ -109,11 +190,12 @@ public class DataMergeController implements Serializable {
         ds.setCreatedAt(new Date());
         ds.setCreatedBy(webUserController.getLoggedUser());
         ds.setName(fileName);
+        ds.setFileName(fileName);
         getDataSourceFacade().create(ds);
         return ds;
     }
 
-    public String importItemsFromExcel() {
+    public String uploadFileToMerge() {
 
         if (file == null) {
             JsfUtil.addErrorMessage("Error in Uploading file. No such file");
@@ -129,7 +211,20 @@ public class DataMergeController implements Serializable {
             selectedProject = createAndSaveANewProject();
         }
 
-        selectedDataSource = createAndSaveANewDataSource(file.getFileName());
+        if (selectedDataSource == null) {
+            selectedDataSource = createAndSaveANewDataSource(file.getFileName());
+        } else {
+            selectedDataSource.setProject(selectedProject);
+            selectedDataSource.setCreatedAt(new Date());
+            selectedDataSource.setCreatedBy(webUserController.getLoggedUser());
+            selectedDataSource.setName(file.getFileName());
+            selectedDataSource.setFileName(file.getFileName());
+            if (selectedDataSource.getId() == null) {
+                getDataSourceFacade().create(selectedDataSource);
+            } else {
+                getDataSourceFacade().edit(selectedDataSource);
+            }
+        }
 
         try {
             String strParentCode;
@@ -190,34 +285,34 @@ public class DataMergeController implements Serializable {
                     cell = sheet.getCell(myCol, dataHeaderRow);
 
                     DataColumn col = new DataColumn();
-                    col.setOrderNo(myCol);
+                    col.setOrderNo(myCol - dataStartColumn);
                     col.setDataSource(selectedDataSource);
                     col.setCreatedAt(new Date());
                     col.setCreatedBy(webUserController.getLoggedUser());
                     col.setName(cell.getContents());
                     getDataColumnFacade().create(col);
 
-                    columnsMap.put(myCol, col);
+                    columnsMap.put(col.getOrderNo(), col);
                 }
 
                 for (int myRow = dataStartRow; myRow < (dataEndRow + 1); myRow++) {
                     DataRow row = new DataRow();
-                    row.setOrderNo(myRow);
+
                     row.setCreatedAt(new Date());
                     row.setCreatedBy(webUserController.getLoggedUser());
                     row.setDataSource(selectedDataSource);
-                    row.setOrderNo(myRow);
+                    row.setOrderNo(myRow - dataStartRow);
                     getDataRowFacade().create(row);
 
-                    rowsMap.put(myRow, row);
+                    rowsMap.put(row.getOrderNo(), row);
                 }
 
                 for (int myCol = dataStartColumn; myCol < (dataEndColumn + 1); myCol++) {
 
-                    DataColumn col = columnsMap.get(myCol);
+                    DataColumn col = columnsMap.get(myCol - dataStartColumn);
 
                     for (int myRow = dataStartRow; myRow < (dataEndRow + 1); myRow++) {
-                        DataRow row = rowsMap.get(myRow);
+                        DataRow row = rowsMap.get(myRow - dataStartRow);
 
                         cell = sheet.getCell(myCol, myRow);
 
@@ -225,14 +320,18 @@ public class DataMergeController implements Serializable {
                         val.setDataColumn(col);
                         val.setDataRow(row);
                         val.setUploadValue(cell.getContents());
-
+                        val.setDataSource(selectedDataSource);
                         getDataValueFacade().create(val);
 
                     }
                 }
 
                 JsfUtil.addSuccessMessage("Succesful. All the data in Excel File Impoted to the database");
-                return "";
+                fillDataForSelectedDatasource();
+                identifyDataTypesOfColumnsOfSelectedDataSource();
+
+                return toViewSelectedDatasourceWithoutFillingData();
+
             } catch (IOException ex) {
                 JsfUtil.addErrorMessage(ex.getMessage());
                 return "";
@@ -243,6 +342,119 @@ public class DataMergeController implements Serializable {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    public void identifyDataTypesOfColumnsOfSelectedDataSource() {
+        if (selectedDataSource == null) {
+            JsfUtil.addErrorMessage("No Datasource");
+            return;
+        }
+        for (DataColumn c : dataColumnsOfSelectedDataSource) {
+            List<DataValue> dvs = new ArrayList<>();
+            for (DataRow r : dataRowsOfSelectedDataSource) {
+                DataValue dv = dataValuesMapOfSelectedDataSource.get(c.getOrderNo() + "," + r.getOrderNo());
+                if (!dv.getUploadValue().trim().equals("")) {
+                    dvs.add(dv);
+                }
+            }
+            boolean isInt = false;
+            boolean isReal = false;
+            boolean isDateTime = false;
+            boolean isShortText = false;
+            boolean isLongText = true;
+            isInt = isInteger(dvs);
+            System.out.println("isInt = " + isInt);
+            if (isInt) {
+                c.setDataType(DataType.Integer_Number);
+            } else {
+                isReal = isReal(dvs);
+                System.out.println("isReal = " + isReal);
+                if (isReal) {
+                    c.setDataType(DataType.Real_Number);
+                } else {
+                    c.setDataType(DataType.Long_Text);
+                }
+            }
+            getDataColumnFacade().edit(c);
+        }
+
+    }
+
+    public boolean isInteger(List<DataValue> dvs) {
+        for (DataValue s : dvs) {
+            if (s.getUploadValue() != null) {
+                boolean thisIsInteger = s.getUploadValue().matches("^-?\\d+$");
+                if (!thisIsInteger) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean isReal(List<DataValue> dvs) {
+        for (DataValue s : dvs) {
+            if (s.getUploadValue() != null) {
+                boolean thisIsReal = s.getUploadValue().matches("^-?\\d+(\\.\\d+)?$");
+                if (!thisIsReal) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public void createColumnsForSelectedDataSource() {
+        String j = "select c from DataColumn c "
+                + " where c.dataSource=:dc "
+                + " order by c.orderNo";
+        Map m = new HashMap();
+        m.put("dc", selectedDataSource);
+        dataColumnsOfSelectedDataSource = getDataColumnFacade().findByJpql(j, m);
+    }
+
+    public void createColumnModelForSelectedDataSource() {
+        dataColumnModelssOfSelectedDataSource = new ArrayList<>();
+        for (DataColumn dc : dataColumnsOfSelectedDataSource) {
+            ColumnModel cm = new ColumnModel(dc.getName(), dc.getName());
+            dataColumnModelssOfSelectedDataSource.add(cm);
+        }
+    }
+
+    public void createRowsForSelectedDataSource() {
+        String j = "select c from DataRow c "
+                + " where c.dataSource=:dc "
+                + " order by c.orderNo";
+        Map m = new HashMap();
+        m.put("dc", selectedDataSource);
+        dataRowsOfSelectedDataSource = getDataRowFacade().findByJpql(j, m);
+    }
+
+    public void fillDataValuesForSelectedDataSource() {
+        String j = "select c from DataValue c "
+                + " where c.dataSource=:dc";
+        Map m = new HashMap();
+        m.put("dc", selectedDataSource);
+        dataValuesOfSelectedDataSource = getDataValueFacade().findByJpql(j, m);
+        dataValuesMapOfSelectedDataSource = new HashedMap<String, DataValue>();
+        for (DataValue dv : dataValuesOfSelectedDataSource) {
+            String cr = dv.getDataColumn().getOrderNo()
+                    + ","
+                    + dv.getDataRow().getOrderNo();
+            dataValuesMapOfSelectedDataSource.put(cr, dv);
+        }
+    }
+
+    public String uploadedValueOfSelectedDataSource(int col, int row) {
+        System.out.println("row = " + row);
+        System.out.println("col = " + col);
+        String cr = col + "," + row;
+        DataValue dv = dataValuesMapOfSelectedDataSource.get(cr);
+        System.out.println("dv = " + dv);
+        if (dv == null) {
+            return "";
+        }
+        return dv.getUploadValue();
     }
 
     public Project getSelectedProject() {
@@ -355,6 +567,81 @@ public class DataMergeController implements Serializable {
 
     public void setDataStartColumn(Integer dataStartColumn) {
         this.dataStartColumn = dataStartColumn;
+    }
+
+    public List<DataRow> getDataRowsOfSelectedDataSource() {
+        return dataRowsOfSelectedDataSource;
+    }
+
+    public void setDataRowsOfSelectedDataSource(List<DataRow> dataRowsOfSelectedDataSource) {
+        this.dataRowsOfSelectedDataSource = dataRowsOfSelectedDataSource;
+    }
+
+    public List<ColumnModel> getDataColumnModelssOfSelectedDataSource() {
+        return dataColumnModelssOfSelectedDataSource;
+    }
+
+    public void setDataColumnModelssOfSelectedDataSource(List<ColumnModel> dataColumnModelssOfSelectedDataSource) {
+        this.dataColumnModelssOfSelectedDataSource = dataColumnModelssOfSelectedDataSource;
+    }
+
+    public Map<String, DataValue> getDataValuesMapOfSelectedDataSource() {
+        return dataValuesMapOfSelectedDataSource;
+    }
+
+    public void setDataValuesMapOfSelectedDataSource(Map<String, DataValue> dataValuesMapOfSelectedDataSource) {
+        this.dataValuesMapOfSelectedDataSource = dataValuesMapOfSelectedDataSource;
+    }
+
+    public List<DataColumn> getDataColumnsOfSelectedDataSource() {
+        return dataColumnsOfSelectedDataSource;
+    }
+
+    public void setDataColumnsOfSelectedDataSource(List<DataColumn> dataColumnsOfSelectedDataSource) {
+        this.dataColumnsOfSelectedDataSource = dataColumnsOfSelectedDataSource;
+    }
+
+    public List<DataValue> getDataValuesOfSelectedDataSource() {
+        return dataValuesOfSelectedDataSource;
+    }
+
+    public void setDataValuesOfSelectedDataSource(List<DataValue> dataValuesOfSelectedDataSource) {
+        this.dataValuesOfSelectedDataSource = dataValuesOfSelectedDataSource;
+    }
+
+    public List<DataSource> getDataSourcesOfSelectedProject() {
+        return dataSourcesOfSelectedProject;
+    }
+
+    public void setDataSourcesOfSelectedProject(List<DataSource> dataSourcesOfSelectedProject) {
+        this.dataSourcesOfSelectedProject = dataSourcesOfSelectedProject;
+    }
+
+    public List<Project> getMyProjects() {
+        return myProjects;
+    }
+
+    public void setMyProjects(List<Project> myProjects) {
+        this.myProjects = myProjects;
+    }
+
+    static public class ColumnModel implements Serializable {
+
+        private String header;
+        private String property;
+
+        public ColumnModel(String header, String property) {
+            this.header = header;
+            this.property = property;
+        }
+
+        public String getHeader() {
+            return header;
+        }
+
+        public String getProperty() {
+            return property;
+        }
     }
 
 }

@@ -60,6 +60,9 @@ public class DataValue implements Serializable {
     private DataColumn dataColumn;
     @ManyToOne
     private DataRow dataRow;
+    
+    @ManyToOne
+    private DataSource dataSource;
 
     @Enumerated(EnumType.STRING)
     private DataType dataType;
@@ -247,5 +250,15 @@ public class DataValue implements Serializable {
     public void setDateTimeFormat(String dateTimeFormat) {
         this.dateTimeFormat = dateTimeFormat;
     }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+    
+    
 
 }

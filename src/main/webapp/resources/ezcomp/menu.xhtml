@@ -17,21 +17,27 @@
 
 
         <h:form>  
-           
+
             <h:outputStylesheet library="css" name="tem1.css"/>
 
-            <p:menubar  rendered="#{webUserController.loggedUser ne null}"  autoDisplay="true"   styleClass="horizontalmenu">
+            <p:menubar  rendered="#{webUserController.loggedUser ne null}" 
+                         styleClass="horizontalmenu">
 
 
                 <p:menuitem ajax="false" value="Home" icon="ui-icon-home" action="#{webUserController.toHome()}" />
-                
+
+
+                <p:submenu label="Data Merge"   >
+                    <p:menuitem value="My Projects" action="#{dataMergeController.toViewMyProjects()}"  />
+                    <p:menuitem value="Upload File" action="#{dataMergeController.toUploadNewFile()}"  />
+                </p:submenu>
 
                 <p:submenu label="Settings"  rendered="#{webUserController.hasPrivilege('User')}" >
                     <p:menuitem value="Change My Password" action="/webUser/my_password"  />
                     <p:menuitem value="Change My Details" action="/webUser/my_details"  />
                 </p:submenu>
 
-               
+
 
 
                 <p:submenu label="Institution Administration"  rendered="#{webUserController.hasPrivilege('Institution_Administration')}"  >
@@ -68,45 +74,7 @@
                 </f:facet>
             </p:menubar>
 
-            <p:menubar  rendered="#{webUserController.loggedUser ne null}"  autoDisplay="false"   styleClass="verticalmenu">
-                <p:submenu label="Menu"  >
-                    <p:menuitem ajax="false" value="Home" icon="ui-icon-home" action="/index" />
-                   
-
-                    <p:submenu label="Settings" >
-                        <p:menuitem value="Change My Password" action="/webUser/my_password"  />
-                        <p:menuitem value="Change My Details" action="/webUser/my_details"  />
-                    </p:submenu>
-
-                   
-
-
-                    <p:submenu label="Institution Administration" >
-                        <p:menuitem value="Manage Users" action="/webUser/index"  />
-                        <p:menuitem value="Manage Institutions" action="/insAdmin/institution_index"  />
-                        <p:menuitem value="Manage Metadata" action="/insAdmin/index"  />
-                    </p:submenu>
-
-                    <p:submenu label="System Administration" >
-                        <p:menuitem value="Manage Users" action="/webUser/index"  />
-                        <p:menuitem value="Manage Institutions" action="/institution/List"  />
-                        <p:menuitem value="Manage Metadata" action="/systemAdmin/index"  />
-                    </p:submenu>
-
-                    <p:submenu label="Help" >
-                        <p:menuitem value="User Manual" action="/wiki" />
-                        <p:menuitem value="Issue Tracker" url="https://github.com/lk-gov-health-hiu/pssp/issues" target="_blank" />
-                        <p:menuitem value="Trouble Shooting" action="/troubleschooter"  />
-                        <p:menuitem value="Fedback" action="/feedback" />
-                        <p:menuitem value="Contact us" action="/contact" />
-                        <p:menuitem value="About us" action="/about_us" />
-                    </p:submenu>
-                    
-                    <p:menuitem ajax="false" value="Logout"  action="#{webUserController.logOut()}" />
-
-                </p:submenu>
-
-            </p:menubar>
+  
 
         </h:form>
 

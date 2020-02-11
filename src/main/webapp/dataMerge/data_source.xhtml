@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="/template.xhtml">
+
+            <ui:define name="content">
+
+                <h:form >
+                    <p:panelGrid columns="2" >
+                        <f:facet name="header" >
+                            <p:outputLabel value="Data Source #{dataMergeController.selectedDataSource.fileName}" ></p:outputLabel>
+                        </f:facet>
+                        
+                        <p:outputLabel value="Project" ></p:outputLabel> 
+                        <p:commandLink value="#{dataMergeController.selectedProject.name}" ajax="false"
+                                       action="#{dataMergeController.toViewSelectedProject()}" ></p:commandLink>
+
+                        <p:commandButton value="Download Excel" ajax="false" >
+                            <p:dataExporter target="tbl" type="xls" fileName="#{dataMergeController.selectedDataSource.fileName}" ></p:dataExporter>
+                        </p:commandButton>
+
+                        <p:commandButton value="Download CSV" ajax="false" >
+                            <p:dataExporter target="tbl" type="csv" fileName="#{dataMergeController.selectedDataSource.fileName}" ></p:dataExporter>
+                        </p:commandButton>
+
+                    </p:panelGrid>
+                    
+                    <p:dataTable value="#{dataMergeController.dataColumnsOfSelectedDataSource}" var="c" >
+                        <p:column headerText="Name">
+                            <p:outputLabel value="#{c.name}" ></p:outputLabel>
+                        </p:column>
+                        <p:column headerText="Type">
+                            <p:outputLabel value="#{c.dataType}" ></p:outputLabel>
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:dataTable id="tbl" var="car" 
+                                 value="#{dataMergeController.dataRowsOfSelectedDataSource}"
+                                 rowIndexVar="rowIndex"> 
+
+                        <p:columns value="#{dataMergeController.dataColumnModelssOfSelectedDataSource}"
+                                   var="column" 
+                                   columnIndexVar="colIndex" >
+                            <f:facet name="header">
+                                <h:outputText value="#{column.header}" />
+                            </f:facet>
+                            <h:outputText value="#{dataMergeController.uploadedValueOfSelectedDataSource(colIndex, rowIndex)}" />
+                        </p:columns>
+                    </p:dataTable>
+
+
+
+
+                </h:form>
+
+
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

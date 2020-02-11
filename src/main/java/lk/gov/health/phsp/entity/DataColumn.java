@@ -26,6 +26,7 @@ package lk.gov.health.phsp.entity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,6 +35,7 @@ import javax.persistence.Temporal;
 import lk.gov.health.phsp.entity.DataSource;
 import lk.gov.health.phsp.entity.Project;
 import lk.gov.health.phsp.entity.WebUser;
+import lk.gov.health.phsp.enums.DataType;
 
 /**
  *
@@ -57,7 +59,8 @@ public class DataColumn implements Serializable {
     private int orderNo;
     @ManyToOne
     private DataColumn referance;
-    
+    @Enumerated
+    private DataType dataType;
     
     //Created Properties
     @ManyToOne
@@ -233,5 +236,15 @@ public class DataColumn implements Serializable {
     public void setRetireComments(String retireComments) {
         this.retireComments = retireComments;
     }
+
+    public DataType getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(DataType dataType) {
+        this.dataType = dataType;
+    }
+    
+    
     
 }
