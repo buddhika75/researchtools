@@ -37,13 +37,7 @@
                             </p:commandButton>
 
 
-                            <p:commandButton value="Download Excel" ajax="false" >
-                                <p:dataExporter target="tbl" type="xls" fileName="#{dataMergeController.selectedDataSource.fileName}" ></p:dataExporter>
-                            </p:commandButton>
 
-                            <p:commandButton value="Download CSV" ajax="false" >
-                                <p:dataExporter target="tbl" type="csv" fileName="#{dataMergeController.selectedDataSource.fileName}" ></p:dataExporter>
-                            </p:commandButton>
 
                         </p:panelGrid>
 
@@ -61,9 +55,7 @@
 
 
                                     <p:dataTable value="#{dataMergeController.dataColumnsOfSelectedDataSource}" var="c" 
-
-
-
+                                                 id="tbl1"
                                                  >
                                         <p:column headerText="Name">
                                             <p:outputLabel value="#{c.name}" ></p:outputLabel>
@@ -86,6 +78,16 @@
                             </p:tab>
 
                             <p:tab title="Data" >
+
+                                <p:panelGrid columns="2" >
+                                    <p:commandButton value="Download Excel" ajax="false" >
+                                        <p:dataExporter target="tbl" type="xls" fileName="#{dataMergeController.selectedDataSource.fileName}" ></p:dataExporter>
+                                    </p:commandButton>
+
+                                    <p:commandButton value="Download CSV" ajax="false" >
+                                        <p:dataExporter target="tbl" type="csv" fileName="#{dataMergeController.selectedDataSource.fileName}" ></p:dataExporter>
+                                    </p:commandButton>
+                                </p:panelGrid>
 
                                 <p:dataTable id="tbl" var="car" 
                                              value="#{dataMergeController.dataRowsOfSelectedDataSource}"
