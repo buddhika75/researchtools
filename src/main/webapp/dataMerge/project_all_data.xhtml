@@ -39,7 +39,7 @@
                                          action="#{dataMergeController.toViewSelectedProject()}" >
                         </p:commandButton>
 
-                        <p:outputLabel value="" ></p:outputLabel>
+                       
                         <p:commandButton value="Download CSV" ajax="false" >
                             <p:dataExporter target="tbl" type="csv" fileName="#{dataMergeController.selectedProject.name}" ></p:dataExporter>
                         </p:commandButton>
@@ -56,9 +56,7 @@
                                  rowsPerPageTemplate="10,50,100,250"
 
                                  > 
-                        <p:column headerText="File" >
-                            <h:outputText value="#{dataMergeController.uploadedValueOfSelectedProjectFileName(rowIndex)}" />
-                        </p:column>
+                       
                         <p:columns value="#{dataMergeController.dataColumnModelssOfSelectedProject}"
                                    var="column" 
                                    columnIndexVar="colIndex" >

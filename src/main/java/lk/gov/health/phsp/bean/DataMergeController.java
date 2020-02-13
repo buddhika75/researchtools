@@ -213,7 +213,7 @@ public class DataMergeController implements Serializable {
 
     public String toUploadNewFile() {
         selectedDataSource = null;
-        createAndSaveANewProject();
+        selectedProject = createAndSaveANewProject();
         return "/dataMerge/upload_file";
     }
 
@@ -301,9 +301,9 @@ public class DataMergeController implements Serializable {
 
         if (selectedProject == null) {
             selectedProject = createAndSaveANewProject();
-        }else if(selectedProject.getId()==null){
+        } else if (selectedProject.getId() == null) {
             getProjectFacade().create(selectedProject);
-        }else{
+        } else {
             getProjectFacade().edit(selectedProject);
         }
 
@@ -689,7 +689,7 @@ public class DataMergeController implements Serializable {
 
             System.out.println("File Name = " + pdr.getDataSource().getFileName());
             System.out.println("pdr = " + pdr.getOrderNo());
-            
+
             String j = "select c from DataValue c "
                     + " where c.dataRow=:dc "
                     + " and c.dataSource.retired=:ret "
@@ -697,7 +697,7 @@ public class DataMergeController implements Serializable {
             Map m = new HashMap();
             m.put("dc", pdr);
             m.put("ret", false);
-            
+
             dataValuesOfSelectedProject = getDataValueFacade().findByJpql(j, m);
 
             for (DataValue dv : dataValuesOfSelectedProject) {

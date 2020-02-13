@@ -33,9 +33,8 @@
                         <p:panelGrid columns="3" >
 
                             <p:commandButton value="Back to Project" ajax="false"
-                                           action="#{dataMergeController.toViewSelectedProject()}" >
+                                             action="#{dataMergeController.toViewSelectedProject()}" >
                             </p:commandButton>
-
 
 
                             <p:commandButton value="Download Excel" ajax="false" >
@@ -49,49 +48,73 @@
                         </p:panelGrid>
 
 
-                        <p:commandButton ajax="false" value="Update" action="#{dataMergeController.updateDataColumnOfSelectedDataSource}" ></p:commandButton>
-
-                        <p:dataTable value="#{dataMergeController.dataColumnsOfSelectedDataSource}" var="c" 
 
 
 
-                                     >
-                            <p:column headerText="Name">
-                                <p:outputLabel value="#{c.name}" ></p:outputLabel>
-                            </p:column>
-                            <p:column headerText="Type">
-                                <p:outputLabel value="#{c.dataType}" ></p:outputLabel>
-                            </p:column>
-                            <p:column headerText="Rererance">
-                                <p:selectOneMenu id="cmbRef" value="#{c.referance}" >
-                                    <f:selectItem itemLabel="Please select" ></f:selectItem>
-                                    <f:selectItems value="#{dataMergeController.dataColumnsMasterOfSelectedProject}"
-                                                   var="pc" itemLabel="#{pc.name}" itemValue="#{pc}" ></f:selectItems>
-                                    <p:ajax event="change" process="cmbRef"  ></p:ajax>
-                                </p:selectOneMenu>
-                            </p:column>
-                        </p:dataTable>
+                        <p:tabView >
 
-                        <p:dataTable id="tbl" var="car" 
-                                     value="#{dataMergeController.dataRowsOfSelectedDataSource}"
-                                     rowIndexVar="rowIndex"
+                            <p:tab title="Columns" >
 
-                                     rows="10"
-                                     paginator="true"
-                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                     rowsPerPageTemplate="10,50,100,250"
+                                <p:panelGrid columns="1" >
 
-                                     > 
+                                    <p:commandButton ajax="false" value="Update" action="#{dataMergeController.updateDataColumnOfSelectedDataSource}" ></p:commandButton>
 
-                            <p:columns value="#{dataMergeController.dataColumnModelssOfSelectedDataSource}"
-                                       var="column" 
-                                       columnIndexVar="colIndex" >
-                                <f:facet name="header">
-                                    <h:outputText value="#{column.header}" />
-                                </f:facet>
-                                <h:outputText value="#{dataMergeController.uploadedValueOfSelectedDataSource(colIndex, rowIndex)}" />
-                            </p:columns>
-                        </p:dataTable>
+
+                                    <p:dataTable value="#{dataMergeController.dataColumnsOfSelectedDataSource}" var="c" 
+
+
+
+                                                 >
+                                        <p:column headerText="Name">
+                                            <p:outputLabel value="#{c.name}" ></p:outputLabel>
+                                        </p:column>
+                                        <p:column headerText="Type">
+                                            <p:outputLabel value="#{c.dataType}" ></p:outputLabel>
+                                        </p:column>
+                                        <p:column headerText="Rererance">
+                                            <p:selectOneMenu id="cmbRef" value="#{c.referance}" >
+                                                <f:selectItem itemLabel="Please select" ></f:selectItem>
+                                                <f:selectItems value="#{dataMergeController.dataColumnsMasterOfSelectedProject}"
+                                                               var="pc" itemLabel="#{pc.name}" itemValue="#{pc}" ></f:selectItems>
+                                                <p:ajax event="change" process="cmbRef"  ></p:ajax>
+                                            </p:selectOneMenu>
+                                        </p:column>
+                                    </p:dataTable>
+
+                                </p:panelGrid>
+
+                            </p:tab>
+
+                            <p:tab title="Data" >
+
+                                <p:dataTable id="tbl" var="car" 
+                                             value="#{dataMergeController.dataRowsOfSelectedDataSource}"
+                                             rowIndexVar="rowIndex"
+
+                                             rows="10"
+                                             paginator="true"
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                             rowsPerPageTemplate="10,50,100,250"
+
+                                             > 
+
+                                    <p:columns value="#{dataMergeController.dataColumnModelssOfSelectedDataSource}"
+                                               var="column" 
+                                               columnIndexVar="colIndex" >
+                                        <f:facet name="header">
+                                            <h:outputText value="#{column.header}" />
+                                        </f:facet>
+                                        <h:outputText value="#{dataMergeController.uploadedValueOfSelectedDataSource(colIndex, rowIndex)}" />
+                                    </p:columns>
+                                </p:dataTable>
+
+
+                            </p:tab>
+
+
+                        </p:tabView>
+
+
 
 
 
