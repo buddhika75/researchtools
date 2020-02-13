@@ -12,75 +12,93 @@
 
             <ui:define name="content">
 
-                <h:form >
-                    <p:panelGrid columns="2" >
-                        <f:facet name="header" >
-                            <p:outputLabel value="Data Source #{dataMergeController.selectedDataSource.fileName}" ></p:outputLabel>
-                        </f:facet>
-
-                        <p:outputLabel value="Project" ></p:outputLabel> 
-                        <p:commandLink value="#{dataMergeController.selectedProject.name}" ajax="false"
-                                       action="#{dataMergeController.toViewSelectedProject()}" ></p:commandLink>
-
-                        <p:commandButton value="Download Excel" ajax="false" >
-                            <p:dataExporter target="tbl" type="xls" fileName="#{dataMergeController.selectedDataSource.fileName}" ></p:dataExporter>
-                        </p:commandButton>
-
-                        <p:commandButton value="Download CSV" ajax="false" >
-                            <p:dataExporter target="tbl" type="csv" fileName="#{dataMergeController.selectedDataSource.fileName}" ></p:dataExporter>
-                        </p:commandButton>
-
-                    </p:panelGrid>
+                <p:panel >
+                    <f:facet name="header" >
+                        <p:outputLabel value="Data Source #{dataMergeController.selectedDataSource.fileName}" ></p:outputLabel>
+                    </f:facet>
+                    <h:form >
+                        <p:panelGrid columns="2" >
 
 
-                    <p:commandButton ajax="false" value="Update" action="#{dataMergeController.updateDataColumnOfSelectedDataSource}" ></p:commandButton>
+                            <p:outputLabel value="Project Name" ></p:outputLabel> 
+                            <p:outputLabel value="#{dataMergeController.selectedProject.name}" ></p:outputLabel> 
 
-                    <p:dataTable value="#{dataMergeController.dataColumnsOfSelectedDataSource}" var="c" 
+                            <p:outputLabel value="Project Details" ></p:outputLabel> 
+                            <p:outputLabel value="#{dataMergeController.selectedProject.description}" ></p:outputLabel> 
 
+                            <p:outputLabel value="File Name" ></p:outputLabel> 
+                            <p:outputLabel value="#{dataMergeController.selectedDataSource.fileName}" ></p:outputLabel> 
 
+                        </p:panelGrid>
+                        <p:panelGrid columns="3" >
 
-                                 >
-                        <p:column headerText="Name">
-                            <p:outputLabel value="#{c.name}" ></p:outputLabel>
-                        </p:column>
-                        <p:column headerText="Type">
-                            <p:outputLabel value="#{c.dataType}" ></p:outputLabel>
-                        </p:column>
-                        <p:column headerText="Rererance">
-                            <p:selectOneMenu id="cmbRef" value="#{c.referance}" >
-                                <f:selectItem itemLabel="Please select" ></f:selectItem>
-                                <f:selectItems value="#{dataMergeController.dataColumnsMasterOfSelectedProject}"
-                                               var="pc" itemLabel="#{pc.name}" itemValue="#{pc}" ></f:selectItems>
-                                <p:ajax event="change" process="cmbRef"  ></p:ajax>
-                            </p:selectOneMenu>
-                        </p:column>
-                    </p:dataTable>
-
-                    <p:dataTable id="tbl" var="car" 
-                                 value="#{dataMergeController.dataRowsOfSelectedDataSource}"
-                                 rowIndexVar="rowIndex"
-
-                                 rows="10"
-                                 paginator="true"
-                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 rowsPerPageTemplate="10,50,100,250"
-
-                                 > 
-
-                        <p:columns value="#{dataMergeController.dataColumnModelssOfSelectedDataSource}"
-                                   var="column" 
-                                   columnIndexVar="colIndex" >
-                            <f:facet name="header">
-                                <h:outputText value="#{column.header}" />
-                            </f:facet>
-                            <h:outputText value="#{dataMergeController.uploadedValueOfSelectedDataSource(colIndex, rowIndex)}" />
-                        </p:columns>
-                    </p:dataTable>
+                            <p:commandButton value="Back to Project" ajax="false"
+                                           action="#{dataMergeController.toViewSelectedProject()}" >
+                            </p:commandButton>
 
 
 
+                            <p:commandButton value="Download Excel" ajax="false" >
+                                <p:dataExporter target="tbl" type="xls" fileName="#{dataMergeController.selectedDataSource.fileName}" ></p:dataExporter>
+                            </p:commandButton>
 
-                </h:form>
+                            <p:commandButton value="Download CSV" ajax="false" >
+                                <p:dataExporter target="tbl" type="csv" fileName="#{dataMergeController.selectedDataSource.fileName}" ></p:dataExporter>
+                            </p:commandButton>
+
+                        </p:panelGrid>
+
+
+                        <p:commandButton ajax="false" value="Update" action="#{dataMergeController.updateDataColumnOfSelectedDataSource}" ></p:commandButton>
+
+                        <p:dataTable value="#{dataMergeController.dataColumnsOfSelectedDataSource}" var="c" 
+
+
+
+                                     >
+                            <p:column headerText="Name">
+                                <p:outputLabel value="#{c.name}" ></p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Type">
+                                <p:outputLabel value="#{c.dataType}" ></p:outputLabel>
+                            </p:column>
+                            <p:column headerText="Rererance">
+                                <p:selectOneMenu id="cmbRef" value="#{c.referance}" >
+                                    <f:selectItem itemLabel="Please select" ></f:selectItem>
+                                    <f:selectItems value="#{dataMergeController.dataColumnsMasterOfSelectedProject}"
+                                                   var="pc" itemLabel="#{pc.name}" itemValue="#{pc}" ></f:selectItems>
+                                    <p:ajax event="change" process="cmbRef"  ></p:ajax>
+                                </p:selectOneMenu>
+                            </p:column>
+                        </p:dataTable>
+
+                        <p:dataTable id="tbl" var="car" 
+                                     value="#{dataMergeController.dataRowsOfSelectedDataSource}"
+                                     rowIndexVar="rowIndex"
+
+                                     rows="10"
+                                     paginator="true"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,50,100,250"
+
+                                     > 
+
+                            <p:columns value="#{dataMergeController.dataColumnModelssOfSelectedDataSource}"
+                                       var="column" 
+                                       columnIndexVar="colIndex" >
+                                <f:facet name="header">
+                                    <h:outputText value="#{column.header}" />
+                                </f:facet>
+                                <h:outputText value="#{dataMergeController.uploadedValueOfSelectedDataSource(colIndex, rowIndex)}" />
+                            </p:columns>
+                        </p:dataTable>
+
+
+
+
+                    </h:form>
+                </p:panel>
+
 
 
 

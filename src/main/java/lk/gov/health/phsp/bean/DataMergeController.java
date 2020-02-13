@@ -88,7 +88,7 @@ public class DataMergeController implements Serializable {
     private Integer dataEndRow = null;
     private Integer dataEndColumn = null;
     private Project selectedProject;
-    private boolean createNewMasterCols = false;
+    private boolean createNewMasterCols = true;
     private DataSource selectedDataSource;
 
     private List<DataSource> dataSourcesOfSelectedProject;
@@ -213,7 +213,7 @@ public class DataMergeController implements Serializable {
 
     public String toUploadNewFile() {
         selectedDataSource = null;
-        selectedProject = null;
+        createAndSaveANewProject();
         return "/dataMerge/upload_file";
     }
 
@@ -301,6 +301,10 @@ public class DataMergeController implements Serializable {
 
         if (selectedProject == null) {
             selectedProject = createAndSaveANewProject();
+        }else if(selectedProject.getId()==null){
+            getProjectFacade().create(selectedProject);
+        }else{
+            getProjectFacade().edit(selectedProject);
         }
 
         if (selectedDataSource == null) {
@@ -449,6 +453,7 @@ public class DataMergeController implements Serializable {
         dataHeaderRow = 0;
         dataEndRow = null;
         dataEndColumn = null;
+        createNewMasterCols = true;
     }
 
     public void updateProjectColumns() {
@@ -614,9 +619,12 @@ public class DataMergeController implements Serializable {
     public void createColumnsForSelectedProject() {
         String j = "select c from DataColumn c "
                 + " where c.project=:dc "
+                + " and c.retired=:ret "
+                + " and c.project.retired=:ret "
                 + " order by c.orderNo";
         Map m = new HashMap();
         m.put("dc", selectedProject);
+        m.put("ret", false);
         dataColumnsOfSelectedProject = getDataColumnFacade().findByJpql(j, m);
     }
 
@@ -648,9 +656,12 @@ public class DataMergeController implements Serializable {
     public void createRowsForSelectedProject() {
         String j = "select c from DataRow c "
                 + " where c.dataSource.project=:dc "
-                + " order by c.dataSource.project.id, c.orderNo";
+                + " and c.dataSource.retired=:ret "
+                + " and c.dataSource.project.retired=:ret "
+                + " order by c.id";
         Map m = new HashMap();
         m.put("dc", selectedProject);
+        m.put("ret", false);
         dataRowsOfSelectedProject = getDataRowFacade().findByJpql(j, m);
     }
 
@@ -676,11 +687,17 @@ public class DataMergeController implements Serializable {
 
         for (DataRow pdr : dataRowsOfSelectedProject) {
 
+            System.out.println("File Name = " + pdr.getDataSource().getFileName());
+            System.out.println("pdr = " + pdr.getOrderNo());
+            
             String j = "select c from DataValue c "
                     + " where c.dataRow=:dc "
+                    + " and c.dataSource.retired=:ret "
                     + " order by c.dataSource.project.id, c.dataRow.orderNo";
             Map m = new HashMap();
             m.put("dc", pdr);
+            m.put("ret", false);
+            
             dataValuesOfSelectedProject = getDataValueFacade().findByJpql(j, m);
 
             for (DataValue dv : dataValuesOfSelectedProject) {

@@ -12,24 +12,36 @@
 
             <ui:define name="content">
 
+                <p:panel >
+                    <f:facet name="header" >
+                        <p:outputLabel value="#{dataMergeController.selectedProject.name}" ></p:outputLabel>
+                    </f:facet>
+
+                </p:panel>
+
                 <h:form  >
                     <p:panelGrid columns="2" >
-                        <f:facet name="header" >
-                            <p:outputLabel value="#{dataMergeController.selectedProject.name}" ></p:outputLabel>
-                        </f:facet>
 
-                        <p:outputLabel value="Name" ></p:outputLabel>
+
+                        <p:outputLabel value="Project Name" ></p:outputLabel>
                         <p:outputLabel value="#{dataMergeController.selectedProject.name}" >
                         </p:outputLabel>
 
-                        <p:outputLabel value="" ></p:outputLabel>
-                        <p:commandButton ajax="false" value="Upload Another File" action="#{dataMergeController.toAddANewDataSourceForTheProject()}" >
+                        <p:outputLabel value="Project Details" ></p:outputLabel>
+                        <p:outputLabel value="#{dataMergeController.selectedProject.description}" >
+                        </p:outputLabel>
+
+
+                    </p:panelGrid>
+                    <p:panelGrid columns="2" >
+
+                        <p:commandButton value="Back to Project" ajax="false"
+                                         action="#{dataMergeController.toViewSelectedProject()}" >
                         </p:commandButton>
 
-
                         <p:outputLabel value="" ></p:outputLabel>
-                         <p:commandButton value="Download CSV" ajax="false" >
-                             <p:dataExporter target="tbl" type="csv" fileName="#{dataMergeController.selectedProject.name}" ></p:dataExporter>
+                        <p:commandButton value="Download CSV" ajax="false" >
+                            <p:dataExporter target="tbl" type="csv" fileName="#{dataMergeController.selectedProject.name}" ></p:dataExporter>
                         </p:commandButton>
 
                     </p:panelGrid>
@@ -45,7 +57,7 @@
 
                                  > 
                         <p:column headerText="File" >
-                             <h:outputText value="#{dataMergeController.uploadedValueOfSelectedProjectFileName(rowIndex)}" />
+                            <h:outputText value="#{dataMergeController.uploadedValueOfSelectedProjectFileName(rowIndex)}" />
                         </p:column>
                         <p:columns value="#{dataMergeController.dataColumnModelssOfSelectedProject}"
                                    var="column" 

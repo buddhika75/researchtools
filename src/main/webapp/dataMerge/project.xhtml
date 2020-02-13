@@ -93,6 +93,16 @@
                                     </p:column>
                                 </p:dataTable>
                             </p:tab>
+                            <p:tab title="Tem" >
+                                
+                                <ui:repeat value="#{dataMergeController.dataRowsOfSelectedProject}" var="d" >
+                                    <p:outputLabel value="#{d.dataSource.name}" ></p:outputLabel>
+                                    <p:outputLabel value="#{d.orderNo}" ></p:outputLabel>
+                                    <br/>
+                                </ui:repeat>
+                                
+                                
+                            </p:tab>
 
                         </p:tabView>
 

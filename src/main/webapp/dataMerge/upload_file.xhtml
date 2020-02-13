@@ -18,8 +18,11 @@
                             <p:outputLabel value="Upload Data Source" ></p:outputLabel>
                         </f:facet>
 
-                        <p:outputLabel value="Project" ></p:outputLabel>
-                        <p:outputLabel value="#{dataMergeController.selectedProject.name}" ></p:outputLabel>
+                        <p:outputLabel value="Project Name" ></p:outputLabel>
+                        <p:inputText value="#{dataMergeController.selectedProject.name}" ></p:inputText>
+                        
+                         <p:outputLabel value="Project Details" ></p:outputLabel>
+                         <p:inputText value="#{dataMergeController.selectedProject.description}" ></p:inputText>
 
                         <p:outputLabel value="Start Column" ></p:outputLabel>
                         <p:inputText value="#{dataMergeController.dataStartColumn}" ></p:inputText>
