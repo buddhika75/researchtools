@@ -13,6 +13,12 @@
 
             <ui:define name="content">
 
+                <h:form >
+                    <p:clock id="time" autoSync="true" ></p:clock>
+                    <p:poll update="time" ></p:poll>
+                </h:form>
+
+
                 <table  class="align-top w3-table-all w3-card-4 w3-margin" style="width: 90%;margin: auto;"  >
                     <tr>
                         <th colspan="2" style="text-align: center;">

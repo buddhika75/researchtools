@@ -20,9 +20,9 @@
 
                         <p:outputLabel value="Project Name" ></p:outputLabel>
                         <p:inputText value="#{dataMergeController.selectedProject.name}" ></p:inputText>
-                        
-                         <p:outputLabel value="Project Details" ></p:outputLabel>
-                         <p:inputTextarea value="#{dataMergeController.selectedProject.description}" ></p:inputTextarea>
+
+                        <p:outputLabel value="Project Details" ></p:outputLabel>
+                        <p:inputTextarea value="#{dataMergeController.selectedProject.description}" ></p:inputTextarea>
 
                         <p:outputLabel value="Start Column" ></p:outputLabel>
                         <p:inputText value="#{dataMergeController.dataStartColumn}" ></p:inputText>
@@ -55,8 +55,15 @@
                         <p:commandButton ajax="false" value="Upload" 
                                          action="#{dataMergeController.uploadFileToMerge()}"  ></p:commandButton>
 
+
+
                     </p:panelGrid>
 
+                </h:form>
+
+                <h:form>
+                    <p:outputLabel id="msg" value="#{dataMergeController.mergingMessage}" ></p:outputLabel>
+                    <p:poll update="msg" ></p:poll>
                 </h:form>
 
 
