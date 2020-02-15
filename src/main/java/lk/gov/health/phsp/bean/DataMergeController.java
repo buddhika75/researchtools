@@ -360,9 +360,18 @@ public class DataMergeController implements Serializable {
                 if (dataHeaderRow == null) {
                     dataHeaderRow = 0;
                 }
-
-                Map<Integer, DataColumn> columnsMap = new HashMap<>();
-
+                
+                
+                
+                selectedDataSource.setDataStartColumn(dataStartColumn);
+                selectedDataSource.setDataEndColumn(dataEndColumn);
+                selectedDataSource.setDataStartRow(dataStartRow);
+                selectedDataSource.setDataEndRow(dataEndRow);
+                selectedDataSource.setDataHeaderRow(dataHeaderRow);
+                
+                getDataSourceFacade().edit(selectedDataSource);
+                
+                
                 for (int myCol = dataStartColumn; myCol < (dataEndColumn + 1); myCol++) {
                     cell = sheet.getCell(myCol, dataHeaderRow);
 
@@ -374,7 +383,7 @@ public class DataMergeController implements Serializable {
                     col.setName(cell.getContents());
                     getDataColumnFacade().create(col);
 
-                    columnsMap.put(col.getOrderNo(), col);
+                  
                     mergingCount++;
                     mergingMessage = "Creating Columns - " + mergingCount;
 

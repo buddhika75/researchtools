@@ -29,6 +29,22 @@
                             <p:outputLabel value="File Name" ></p:outputLabel> 
                             <p:outputLabel value="#{dataMergeController.selectedDataSource.fileName}" ></p:outputLabel> 
 
+                            <p:outputLabel value="Data Header Row" ></p:outputLabel> 
+                            <p:outputLabel value="#{dataMergeController.selectedDataSource.dataHeaderRow}" ></p:outputLabel> 
+
+                            <p:outputLabel value="Data Start Row" ></p:outputLabel> 
+                            <p:outputLabel value="#{dataMergeController.selectedDataSource.dataStartRow}" ></p:outputLabel> 
+
+                            <p:outputLabel value="Data End Row" ></p:outputLabel> 
+                            <p:outputLabel value="#{dataMergeController.selectedDataSource.dataEndRow}" ></p:outputLabel> 
+
+                            <p:outputLabel value="Data Start Column" ></p:outputLabel> 
+                            <p:outputLabel value="#{dataMergeController.selectedDataSource.dataStartColumn}" ></p:outputLabel> 
+
+                            <p:outputLabel value="Data End Column" ></p:outputLabel> 
+                            <p:outputLabel value="#{dataMergeController.selectedDataSource.dataEndColumn}" ></p:outputLabel> 
+
+
                         </p:panelGrid>
                         <p:panelGrid columns="3" >
 
@@ -54,6 +70,7 @@
                                 <p:column headerText="Name">
                                     <p:outputLabel value="#{c.name}" ></p:outputLabel>
                                 </p:column>
+
 
                             </p:dataTable>
 
