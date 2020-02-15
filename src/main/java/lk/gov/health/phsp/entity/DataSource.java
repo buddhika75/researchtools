@@ -53,6 +53,11 @@ public class DataSource implements Serializable {
     
     private int orderNo;
     
+     private Integer dataStartRow = 1;
+    private Integer dataStartColumn = 0;
+    private Integer dataHeaderRow = 0;
+    private Integer dataEndRow = null;
+    private Integer dataEndColumn = null;
     
    
     //Created Properties
@@ -220,6 +225,46 @@ public class DataSource implements Serializable {
 
     public void setRetireComments(String retireComments) {
         this.retireComments = retireComments;
+    }
+
+    public Integer getDataStartRow() {
+        return dataStartRow;
+    }
+
+    public void setDataStartRow(Integer dataStartRow) {
+        this.dataStartRow = dataStartRow;
+    }
+
+    public Integer getDataStartColumn() {
+        return dataStartColumn;
+    }
+
+    public void setDataStartColumn(Integer dataStartColumn) {
+        this.dataStartColumn = dataStartColumn;
+    }
+
+    public Integer getDataHeaderRow() {
+        return dataHeaderRow;
+    }
+
+    public void setDataHeaderRow(Integer dataHeaderRow) {
+        this.dataHeaderRow = dataHeaderRow;
+    }
+
+    public Integer getDataEndRow() {
+        return dataEndRow;
+    }
+
+    public void setDataEndRow(Integer dataEndRow) {
+        this.dataEndRow = dataEndRow;
+    }
+
+    public Integer getDataEndColumn() {
+        return dataEndColumn;
+    }
+
+    public void setDataEndColumn(Integer dataEndColumn) {
+        this.dataEndColumn = dataEndColumn;
     }
     
 }

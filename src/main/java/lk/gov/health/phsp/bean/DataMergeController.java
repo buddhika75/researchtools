@@ -43,17 +43,15 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import lk.gov.health.phsp.entity.DataColumn;
-import lk.gov.health.phsp.entity.DataRow;
+
 import lk.gov.health.phsp.entity.DataSource;
-import lk.gov.health.phsp.entity.DataValue;
-import lk.gov.health.phsp.entity.Item;
+
 import lk.gov.health.phsp.entity.Project;
 import lk.gov.health.phsp.enums.DataType;
-import lk.gov.health.phsp.enums.ItemType;
 import lk.gov.health.phsp.facade.DataColumnFacade;
-import lk.gov.health.phsp.facade.DataRowFacade;
+
 import lk.gov.health.phsp.facade.DataSourceFacade;
-import lk.gov.health.phsp.facade.DataValueFacade;
+
 import lk.gov.health.phsp.facade.ProjectFacade;
 import lk.gov.health.phsp.facade.util.JsfUtil;
 import org.apache.commons.collections4.map.HashedMap;
@@ -73,10 +71,6 @@ public class DataMergeController implements Serializable {
     private DataSourceFacade dataSourceFacade;
     @EJB
     private DataColumnFacade dataColumnFacade;
-    @EJB
-    private DataRowFacade dataRowFacade;
-    @EJB
-    private DataValueFacade dataValueFacade;
 
     @Inject
     private WebUserController webUserController;
@@ -96,28 +90,23 @@ public class DataMergeController implements Serializable {
 
     private List<DataColumn> dataColumnsMasterOfSelectedProject;
 
-    private List<DataRow> dataRowsOfSelectedProject;
     private List<DataColumn> dataColumnsOfSelectedProject;
-    private List<DataValue> dataValuesOfSelectedProject;
-    private Map<String, DataValue> dataValuesMapOfSelectedProject;
+
     private List<ColumnModel> dataColumnModelssOfSelectedProject;
 
-    private List<DataRow> dataRowsOfSelectedDataSource;
     private List<DataColumn> dataColumnsOfSelectedDataSource;
-    private List<DataValue> dataValuesOfSelectedDataSource;
-    private Map<String, DataValue> dataValuesMapOfSelectedDataSource;
+
     private List<ColumnModel> dataColumnModelssOfSelectedDataSource;
 
     private DataSource removingDataSource;
-    private DataRow removingDataRow;
+
     private DataColumn removingDataColumn;
     private Project removingProject;
-    
+
     private String mergingMessage = null;
     private Long mergingCount;
     private Long mergingCol;
     private Long mergingRow;
-            
 
     /**
      * Creates a new instance of DataMerge
@@ -149,18 +138,6 @@ public class DataMergeController implements Serializable {
         getDataColumnFacade().edit(removingDataColumn);
         removingDataColumn = null;
         fillMasterDataColumnsOfSelectedProject();
-    }
-
-    public void removeDataRow() {
-        if (removingDataRow == null) {
-            JsfUtil.addErrorMessage("Please Select");
-            return;
-        }
-        removingDataRow.setRetired(true);
-        removingDataRow.setRetiredBy(webUserController.getLoggedUser());
-        removingDataRow.setRetiredAt(new Date());
-        getDataRowFacade().edit(removingDataRow);
-        removingDataRow = null;
     }
 
     public void removeDataSource() {
@@ -203,23 +180,23 @@ public class DataMergeController implements Serializable {
     }
 
     public void fillDataForSelectedDatasource() {
+        System.out.println("mergingMessage = " + mergingMessage);
         mergingMessage = "Creating Columns";
+        System.out.println("mergingMessage = " + mergingMessage);
         createColumnsForSelectedDataSource();
         mergingMessage = "Creating Column Models";
+        System.out.println("mergingMessage = " + mergingMessage);
         createColumnModelForSelectedDataSource();
-        mergingMessage = "Creating Rows";
-        createRowsForSelectedDataSource();
-        mergingMessage = "Filling Values";
-        fillDataValuesForSelectedDataSource();
         mergingMessage = "Creating Master columns for Project";
+        System.out.println("mergingMessage = " + mergingMessage);
         createColumnsForSelectedProject();
     }
 
     public void fillDataForSelectedProject() {
         createColumnsForSelectedProject();
-        createColumnModelForSelectedProject();
-        createRowsForSelectedProject();
-        fillDataValuesForSelectedProject();
+        for (DataColumn pc : dataColumnsOfSelectedProject) {
+
+        }
     }
 
     public String toUploadNewFile() {
@@ -300,9 +277,9 @@ public class DataMergeController implements Serializable {
     }
 
     public String uploadFileToMerge() {
-        
+
         System.out.println("uploadFileToMerge");
-        
+
         mergingCount = 0l;
         mergingMessage = "Uploading";
 
@@ -340,19 +317,11 @@ public class DataMergeController implements Serializable {
         }
 
         try {
-            String strParentCode;
-            String strItemName;
-            String strItemType;
-            String strItemCode;
-
-            Item parent = null;
 
             File inputWorkbook;
             Workbook w;
             Cell cell;
             InputStream in;
-
-            JsfUtil.addSuccessMessage(file.getFileName());
 
             try {
                 JsfUtil.addSuccessMessage(file.getFileName());
@@ -391,11 +360,9 @@ public class DataMergeController implements Serializable {
                 if (dataHeaderRow == null) {
                     dataHeaderRow = 0;
                 }
-                Map<Integer, DataColumn> columnsMap = new HashMap<Integer, DataColumn>();
-                Map<Integer, DataRow> rowsMap = new HashMap<Integer, DataRow>();
 
-                
-                
+                Map<Integer, DataColumn> columnsMap = new HashMap<>();
+
                 for (int myCol = dataStartColumn; myCol < (dataEndColumn + 1); myCol++) {
                     cell = sheet.getCell(myCol, dataHeaderRow);
 
@@ -410,80 +377,31 @@ public class DataMergeController implements Serializable {
                     columnsMap.put(col.getOrderNo(), col);
                     mergingCount++;
                     mergingMessage = "Creating Columns - " + mergingCount;
-                    
+
                     System.out.println("mergingMessage = " + mergingMessage);
-                    
-                }
 
-                
-                mergingCount = 0l;
-                
-                for (int myRow = dataStartRow; myRow < (dataEndRow + 1); myRow++) {
-                    DataRow row = new DataRow();
-
-                    row.setCreatedAt(new Date());
-                    row.setCreatedBy(webUserController.getLoggedUser());
-                    row.setDataSource(selectedDataSource);
-                    row.setOrderNo(myRow - dataStartRow);
-                    getDataRowFacade().create(row);
-
-                    rowsMap.put(row.getOrderNo(), row);
-                    
-                    mergingCount++;
-                    mergingMessage = "Creating Rows - " + mergingCount;
-                    
-                    System.out.println("mergingMessage = " + mergingMessage);
-                    
                 }
 
                 mergingCount = 0l;
-                mergingCol = 0l;
-                mergingRow = 0l;
-                
-                for (int myCol = dataStartColumn; myCol < (dataEndColumn + 1); myCol++) {
-
-                    DataColumn col = columnsMap.get(myCol - dataStartColumn);
-
-                    mergingRow = 0l;
-                    
-                    for (int myRow = dataStartRow; myRow < (dataEndRow + 1); myRow++) {
-                        DataRow row = rowsMap.get(myRow - dataStartRow);
-
-                        cell = sheet.getCell(myCol, myRow);
-
-                        DataValue val = new DataValue();
-                        val.setDataColumn(col);
-                        val.setDataRow(row);
-                        val.setUploadValue(cell.getContents());
-                        val.setDataSource(selectedDataSource);
-                        getDataValueFacade().create(val);
-                        mergingRow++;
-                        mergingMessage = "Recording data of " + mergingCol + " column and " + mergingRow + "row.";
-
-                        System.out.println("mergingMessage = " + mergingMessage);
-                        
-                    }
-                    
-                    mergingCol++;
-                    
-                }
 
                 JsfUtil.addSuccessMessage("Succesful. All the data in Excel File Impoted to the database");
 
                 fillDataForSelectedDatasource();
-                
-                identifyDataTypesOfColumnsOfSelectedDataSource();
 
                 mergingMessage = "Updating Master columns for Project";
+                System.out.println("mergingMessage = " + mergingMessage);
                 updateProjectColumns();
 
                 mergingMessage = "FIlling Master columns for Project";
+                System.out.println("mergingMessage = " + mergingMessage);
                 fillMasterDataColumnsOfSelectedProject();
 
                 mergingMessage = "Resetting file date";
+                System.out.println("mergingMessage = " + mergingMessage);
                 resetUploadFileDate();
 
                 mergingMessage = "Finishing";
+                System.out.println("mergingMessage = " + mergingMessage);
                 return toViewSelectedDatasourceWithoutFillingData();
 
             } catch (IOException ex) {
@@ -506,7 +424,6 @@ public class DataMergeController implements Serializable {
         dataEndColumn = null;
         createNewMasterCols = true;
     }
-    
 
     public void updateProjectColumns() {
         System.out.println("update Project Columns");
@@ -523,7 +440,6 @@ public class DataMergeController implements Serializable {
         for (DataColumn dsCol : dataColumnsOfSelectedDataSource) {
             boolean suitableColumnFound = false;
             boolean nameIsExactlyTheSame = false;
-            boolean dataTypeIsSimilar = false;
 
             for (DataColumn pCol : pcs) {
 
@@ -531,15 +447,12 @@ public class DataMergeController implements Serializable {
                 if (dsCol.getName().equalsIgnoreCase(pCol.getName())) {
                     nameIsExactlyTheSame = true;
                 }
-                if (dsCol.getDataType().equals(pCol.getDataType())) {
-                    dataTypeIsSimilar = true;
-                }
 
                 System.out.println("nameIsExactlyTheSame = " + nameIsExactlyTheSame);
-                System.out.println("dataTypeIsSimilar = " + dataTypeIsSimilar);
+                System.out.println("dataTypeIsSimilar = ");
 
                 //TODO: Add More Logic
-                if (nameIsExactlyTheSame && dataTypeIsSimilar) {
+                if (nameIsExactlyTheSame) {
                     suitableColumnFound = true;
                     dsCol.setReferance(pCol);
                     getDataColumnFacade().edit(dsCol);
@@ -589,79 +502,6 @@ public class DataMergeController implements Serializable {
 
     }
 
-    /**
-     *
-     *
-     * To Do
-     *
-     * Check Date
-     * http://regexlib.com/DisplayPatterns.aspx?cattabindex=4&categoryid=5&p=7
-     *
-     * Check Similarity in Names
-     * https://stackoverflow.com/questions/955110/similarity-string-comparison-in-java
-     *
-     */
-    public void identifyDataTypesOfColumnsOfSelectedDataSource() {
-        if (selectedDataSource == null) {
-            JsfUtil.addErrorMessage("No Datasource");
-            return;
-        }
-        mergingCol = 0l;
-        for (DataColumn c : dataColumnsOfSelectedDataSource) {
-            mergingMessage = "Identifying Master columns for Project - column " + mergingCol;
-            mergingCol++;
-            List<DataValue> dvs = new ArrayList<>();
-            for (DataRow r : dataRowsOfSelectedDataSource) {
-                DataValue dv = dataValuesMapOfSelectedDataSource.get(c.getOrderNo() + "," + r.getOrderNo());
-                if (!dv.getUploadValue().trim().equals("")) {
-                    dvs.add(dv);
-                }
-            }
-            boolean isInt = false;
-            boolean isReal = false;
-            boolean isDateTime = false;
-            boolean isShortText = false;
-            boolean isLongText = true;
-            isInt = isInteger(dvs);
-            if (isInt) {
-                c.setDataType(DataType.Integer_Number);
-            } else {
-                isReal = isReal(dvs);
-                if (isReal) {
-                    c.setDataType(DataType.Real_Number);
-                } else {
-                    c.setDataType(DataType.Long_Text);
-                }
-            }
-            getDataColumnFacade().edit(c);
-        }
-
-    }
-
-    public boolean isInteger(List<DataValue> dvs) {
-        for (DataValue s : dvs) {
-            if (s.getUploadValue() != null) {
-                boolean thisIsInteger = s.getUploadValue().matches("^-?\\d+$");
-                if (!thisIsInteger) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public boolean isReal(List<DataValue> dvs) {
-        for (DataValue s : dvs) {
-            if (s.getUploadValue() != null) {
-                boolean thisIsReal = s.getUploadValue().matches("^-?\\d+(\\.\\d+)?$");
-                if (!thisIsReal) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     public void createColumnsForSelectedDataSource() {
         String j = "select c from DataColumn c "
                 + " where c.dataSource=:dc "
@@ -689,114 +529,6 @@ public class DataMergeController implements Serializable {
             ColumnModel cm = new ColumnModel(dc.getName(), dc.getName());
             dataColumnModelssOfSelectedDataSource.add(cm);
         }
-    }
-
-    public void createColumnModelForSelectedProject() {
-        dataColumnModelssOfSelectedProject = new ArrayList<>();
-        for (DataColumn dc : dataColumnsOfSelectedProject) {
-            ColumnModel cm = new ColumnModel(dc.getName(), dc.getName());
-            dataColumnModelssOfSelectedProject.add(cm);
-        }
-    }
-
-    public void createRowsForSelectedDataSource() {
-        String j = "select c from DataRow c "
-                + " where c.dataSource=:dc "
-                + " order by c.orderNo";
-        Map m = new HashMap();
-        m.put("dc", selectedDataSource);
-        dataRowsOfSelectedDataSource = getDataRowFacade().findByJpql(j, m);
-    }
-
-    public void createRowsForSelectedProject() {
-        String j = "select c from DataRow c "
-                + " where c.dataSource.project=:dc "
-                + " and c.dataSource.retired=:ret "
-                + " and c.dataSource.project.retired=:ret "
-                + " order by c.id";
-        Map m = new HashMap();
-        m.put("dc", selectedProject);
-        m.put("ret", false);
-        dataRowsOfSelectedProject = getDataRowFacade().findByJpql(j, m);
-    }
-
-    public void fillDataValuesForSelectedDataSource() {
-        String j = "select c from DataValue c "
-                + " where c.dataSource=:dc";
-        Map m = new HashMap();
-        m.put("dc", selectedDataSource);
-        dataValuesOfSelectedDataSource = getDataValueFacade().findByJpql(j, m);
-        dataValuesMapOfSelectedDataSource = new HashedMap<String, DataValue>();
-        for (DataValue dv : dataValuesOfSelectedDataSource) {
-            String cr = dv.getDataColumn().getOrderNo()
-                    + ","
-                    + dv.getDataRow().getOrderNo();
-            dataValuesMapOfSelectedDataSource.put(cr, dv);
-        }
-    }
-
-    public void fillDataValuesForSelectedProject() {
-
-        Long l = 0l;
-        dataValuesMapOfSelectedProject = new HashedMap<String, DataValue>();
-
-        for (DataRow pdr : dataRowsOfSelectedProject) {
-
-            System.out.println("File Name = " + pdr.getDataSource().getFileName());
-            System.out.println("pdr = " + pdr.getOrderNo());
-
-            String j = "select c from DataValue c "
-                    + " where c.dataRow=:dc "
-                    + " and c.dataSource.retired=:ret "
-                    + " order by c.dataSource.project.id, c.dataRow.orderNo";
-            Map m = new HashMap();
-            m.put("dc", pdr);
-            m.put("ret", false);
-
-            dataValuesOfSelectedProject = getDataValueFacade().findByJpql(j, m);
-
-            for (DataValue dv : dataValuesOfSelectedProject) {
-                if (dv.getDataColumn().getReferance() != null) {
-                    String cr = dv.getDataColumn().getReferance().getOrderNo()
-                            + ","
-                            + l;
-                    dataValuesMapOfSelectedProject.put(cr, dv);
-                }
-
-            }
-            l++;
-
-        }
-
-    }
-
-    public String uploadedValueOfSelectedDataSource(int col, int row) {
-
-        String cr = col + "," + row;
-        DataValue dv = dataValuesMapOfSelectedDataSource.get(cr);
-        if (dv == null) {
-            return "";
-        }
-        return dv.getUploadValue();
-    }
-
-    public String uploadedValueOfSelectedProject(int col, int row) {
-        String cr = col + "," + row;
-        DataValue dv = dataValuesMapOfSelectedProject.get(cr);
-        if (dv == null) {
-            return "";
-        }
-
-        return dv.getUploadValue();
-    }
-
-    public String uploadedValueOfSelectedProjectFileName(int row) {
-        String cr = "0," + row;
-        DataValue dv = dataValuesMapOfSelectedProject.get(cr);
-        if (dv == null) {
-            return "";
-        }
-        return dv.getDataSource().getFileName();
     }
 
     public DataSource getSelectedDataSource() {
@@ -847,22 +579,6 @@ public class DataMergeController implements Serializable {
         this.dataColumnFacade = dataColumnFacade;
     }
 
-    public DataRowFacade getDataRowFacade() {
-        return dataRowFacade;
-    }
-
-    public void setDataRowFacade(DataRowFacade dataRowFacade) {
-        this.dataRowFacade = dataRowFacade;
-    }
-
-    public DataValueFacade getDataValueFacade() {
-        return dataValueFacade;
-    }
-
-    public void setDataValueFacade(DataValueFacade dataValueFacade) {
-        this.dataValueFacade = dataValueFacade;
-    }
-
     public WebUserController getWebUserController() {
         return webUserController;
     }
@@ -903,14 +619,6 @@ public class DataMergeController implements Serializable {
         this.dataStartColumn = dataStartColumn;
     }
 
-    public List<DataRow> getDataRowsOfSelectedDataSource() {
-        return dataRowsOfSelectedDataSource;
-    }
-
-    public void setDataRowsOfSelectedDataSource(List<DataRow> dataRowsOfSelectedDataSource) {
-        this.dataRowsOfSelectedDataSource = dataRowsOfSelectedDataSource;
-    }
-
     public List<ColumnModel> getDataColumnModelssOfSelectedDataSource() {
         return dataColumnModelssOfSelectedDataSource;
     }
@@ -919,28 +627,12 @@ public class DataMergeController implements Serializable {
         this.dataColumnModelssOfSelectedDataSource = dataColumnModelssOfSelectedDataSource;
     }
 
-    public Map<String, DataValue> getDataValuesMapOfSelectedDataSource() {
-        return dataValuesMapOfSelectedDataSource;
-    }
-
-    public void setDataValuesMapOfSelectedDataSource(Map<String, DataValue> dataValuesMapOfSelectedDataSource) {
-        this.dataValuesMapOfSelectedDataSource = dataValuesMapOfSelectedDataSource;
-    }
-
     public List<DataColumn> getDataColumnsOfSelectedDataSource() {
         return dataColumnsOfSelectedDataSource;
     }
 
     public void setDataColumnsOfSelectedDataSource(List<DataColumn> dataColumnsOfSelectedDataSource) {
         this.dataColumnsOfSelectedDataSource = dataColumnsOfSelectedDataSource;
-    }
-
-    public List<DataValue> getDataValuesOfSelectedDataSource() {
-        return dataValuesOfSelectedDataSource;
-    }
-
-    public void setDataValuesOfSelectedDataSource(List<DataValue> dataValuesOfSelectedDataSource) {
-        this.dataValuesOfSelectedDataSource = dataValuesOfSelectedDataSource;
     }
 
     public List<DataSource> getDataSourcesOfSelectedProject() {
@@ -977,14 +669,6 @@ public class DataMergeController implements Serializable {
         }
     }
 
-    public void updateDataRow(DataRow row) {
-        getDataRowFacade().edit(row);
-    }
-
-    public void updateDataValue(DataValue val) {
-        getDataValueFacade().edit(val);
-    }
-
     public void updateDataSource(DataSource ds) {
         getDataSourceFacade().edit(ds);
     }
@@ -993,36 +677,12 @@ public class DataMergeController implements Serializable {
         getProjectFacade().edit(pro);
     }
 
-    public List<DataRow> getDataRowsOfSelectedProject() {
-        return dataRowsOfSelectedProject;
-    }
-
-    public void setDataRowsOfSelectedProject(List<DataRow> dataRowsOfSelectedProject) {
-        this.dataRowsOfSelectedProject = dataRowsOfSelectedProject;
-    }
-
     public List<DataColumn> getDataColumnsOfSelectedProject() {
         return dataColumnsOfSelectedProject;
     }
 
     public void setDataColumnsOfSelectedProject(List<DataColumn> dataColumnsOfSelectedProject) {
         this.dataColumnsOfSelectedProject = dataColumnsOfSelectedProject;
-    }
-
-    public List<DataValue> getDataValuesOfSelectedProject() {
-        return dataValuesOfSelectedProject;
-    }
-
-    public void setDataValuesOfSelectedProject(List<DataValue> dataValuesOfSelectedProject) {
-        this.dataValuesOfSelectedProject = dataValuesOfSelectedProject;
-    }
-
-    public Map<String, DataValue> getDataValuesMapOfSelectedProject() {
-        return dataValuesMapOfSelectedProject;
-    }
-
-    public void setDataValuesMapOfSelectedProject(Map<String, DataValue> dataValuesMapOfSelectedProject) {
-        this.dataValuesMapOfSelectedProject = dataValuesMapOfSelectedProject;
     }
 
     public List<ColumnModel> getDataColumnModelssOfSelectedProject() {
@@ -1047,14 +707,6 @@ public class DataMergeController implements Serializable {
 
     public void setRemovingDataSource(DataSource removingDataSource) {
         this.removingDataSource = removingDataSource;
-    }
-
-    public DataRow getRemovingDataRow() {
-        return removingDataRow;
-    }
-
-    public void setRemovingDataRow(DataRow removingDataRow) {
-        this.removingDataRow = removingDataRow;
     }
 
     public DataColumn getRemovingDataColumn() {
@@ -1112,8 +764,6 @@ public class DataMergeController implements Serializable {
     public void setMergingRow(Long mergingRow) {
         this.mergingRow = mergingRow;
     }
-    
-    
 
     static public class ColumnModel implements Serializable {
 
