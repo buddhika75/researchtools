@@ -62,7 +62,7 @@
                         <p:tabView >
                             <p:tab title="Files" >
                                 <p:dataTable value="#{dataMergeController.dataSourcesOfSelectedProject}" 
-                                             var="ds"
+                                             var="ds" id="tbl"
                                              rowKey="#{ds.id}"
                                              rowIndexVar="n">
                                     <f:facet name="header" >
@@ -75,12 +75,26 @@
                                         <p:outputLabel value="#{ds.name}"  >
                                         </p:outputLabel>
                                     </p:column>
+                                    <p:column headerText="Selected" >
+                                        <p:outputLabel value="#{ds.selected?'Yes':'No'}"  >
+                                        </p:outputLabel>
+                                    </p:column>
                                     <p:column headerText="Uploaded At" >
                                         <p:outputLabel value="#{ds.createdAt}"  >
                                             <f:convertDateTime pattern="dd MMMM yyyy hh:mm a" ></f:convertDateTime>
                                         </p:outputLabel>
                                     </p:column>
+                                    <p:column headerText="Uploaded By" >
+                                        <p:outputLabel value="#{ds.createdBy.person.name}"  >
+                                        </p:outputLabel>
+                                    </p:column>
                                     <p:column headerText="Actions">
+
+                                        <p:commandLink id="btnSelect" value="Select" process="@this" update="tbl"
+                                                       action="#{dataMergeController.toSelectDatasource()}" >
+                                            <f:setPropertyActionListener value="#{ds}" target="#{dataMergeController.selectedDataSource}" ></f:setPropertyActionListener>
+                                        </p:commandLink>
+                                        <p:spacer height="1" width="10" ></p:spacer>
                                         <p:commandLink value="View" ajax="false" action="#{dataMergeController.toViewSelectedDatasource()}" >
                                             <f:setPropertyActionListener value="#{ds}" target="#{dataMergeController.selectedDataSource}" ></f:setPropertyActionListener>
                                         </p:commandLink>
@@ -105,8 +119,13 @@
                                             <f:ajax event="blur" execute="txtOrderNo" listener="#{dataMergeController.updateDataColumn(c)}" ></f:ajax>
                                         </p:inputText>
                                     </p:column>
-                                    <p:column headerText="Data Type" >
-                                        <p:outputLabel value="#{c.dataType}"  >
+                                    <p:column headerText="Created At" >
+                                        <p:outputLabel value="#{c.createdAt}"  >
+                                            <f:convertDateTime pattern="dd MMMM yyyy hh:mm:ss a" ></f:convertDateTime>
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="Created By" >
+                                        <p:outputLabel value="#{c.createdBy.person.name}"  >
                                         </p:outputLabel>
                                     </p:column>
                                     <p:column headerText="Actions" >

@@ -188,6 +188,15 @@ public class DataMergeController implements Serializable {
         return "/dataMerge/data_source";
     }
 
+    public void toSelectDatasource() {
+        if (selectedDataSource == null) {
+            JsfUtil.addErrorMessage("No datasource");
+            return;
+        }
+        selectedDataSource.setSelected(true);
+        getDataSourceFacade().edit(selectedDataSource);
+    }
+
     public String toViewSelectedDatasourceWithoutFillingData() {
         if (selectedDataSource == null) {
             JsfUtil.addErrorMessage("No datasource");
@@ -242,7 +251,7 @@ public class DataMergeController implements Serializable {
 
         //1. Create an Excel file
         WritableWorkbook myFirstWbook = null;
-        File newFile = new File("/tmp/" + selectedProject.getName() + ".xls");
+        File newFile = new File("/tmp/" + selectedProject.getName() + (new Date()).getTime() + ".xls");
         try {
 
             myFirstWbook = Workbook.createWorkbook(newFile);
@@ -264,67 +273,80 @@ public class DataMergeController implements Serializable {
 
             for (DataSource ds : dataSourcesOfSelectedProject) {
 
-                mergingMessage = "Data Source - " + ds.getFileName();
+                if (ds.isSelected()) {
 
-                DataSourceFile dsf = new DataSourceFile(ds);
+                    mergingMessage = "Data Source - " + ds.getFileName();
 
-                Cell tc = dsf.getSheet().getCell(0, 0);
+                    System.out.println("Data Source - " + ds.getFileName());
 
-                List<DataColumn> dataColumnsOfDataSource = findDataColumnsOfADataSource(ds);
+                    DataSourceFile dsf = new DataSourceFile(ds);
 
-                int valueExtractCol = ds.getDataStartColumn();
-                int dsRow = 0;
+                    Cell tc = dsf.getSheet().getCell(0, 0);
 
-                for (DataColumn colOfDs : dataColumnsOfDataSource) {
-                    if (colOfDs.getReferance() != null) {
+                    List<DataColumn> dataColumnsOfDataSource = findDataColumnsOfADataSource(ds);
 
-                        DataColumn cdOfP = colOfDs.getReferance();
+                    int valueExtractCol = ds.getDataStartColumn();
+                    int dsRow = 0;
 
-                        mergingMessage += "\n" + "Column " + cdOfP.getName();
+                    for (DataColumn colOfDs : dataColumnsOfDataSource) {
 
-                        dsRow = 0;
-                        for (int valueExtractRow = ds.getDataStartRow(); valueExtractRow < (ds.getDataEndRow() + 1); valueExtractRow++) {
-                            Cell valueCell = dsf.getSheet().getCell(valueExtractCol, valueExtractRow);
-                            String valueString = valueCell.getContents();
-                            if (valueCell.getType() == CellType.LABEL) {
-                                Label labelCell = new Label(cdOfP.getOrderNo(), dsRow + writeStartRow, valueString);
-                                excelSheet.addCell(labelCell);
-                            } else if (valueCell.getType() == CellType.NUMBER) {
-                                NumberCell numCell = (NumberCell) valueCell;
-                                double num = numCell.getValue();
-                                Number numberCell = new Number(cdOfP.getOrderNo(), dsRow + writeStartRow, num);
-                                excelSheet.addCell(numberCell);
-                            } else if (valueCell.getType() == CellType.DATE) {
-                                DateCell dateCell = (DateCell) valueCell;
-                                Date date = dateCell.getDate();
-                                DateTime dateTimeCell = new DateTime(cdOfP.getOrderNo(), dsRow + writeStartRow, date);
-                                excelSheet.addCell(dateTimeCell);
-                            }  else {
-                                Label label = new Label(cdOfP.getOrderNo(), dsRow + writeStartRow, valueString);
-                                excelSheet.addCell(label);
+                        System.out.println("colOfDs.getName() = " + colOfDs.getName());
+
+                        if (colOfDs.getReferance() != null) {
+
+                            DataColumn cdOfP = colOfDs.getReferance();
+
+                            System.out.println("colOfDs.getReferance().getName() = " + colOfDs.getReferance().getName());
+
+                            mergingMessage += "<br/>" + "Column " + cdOfP.getName();
+
+                            dsRow = 0;
+                            for (int valueExtractRow = ds.getDataStartRow(); valueExtractRow < (ds.getDataEndRow() + 1); valueExtractRow++) {
+
+                                System.out.println("col:row = " + cdOfP.getOrderNo() + ":" + (dsRow + writeStartRow));
+
+                                Cell valueCell = dsf.getSheet().getCell(valueExtractCol, valueExtractRow);
+                                String valueString = valueCell.getContents();
+                                if (valueCell.getType() == CellType.LABEL) {
+                                    Label labelCell = new Label(cdOfP.getOrderNo(), dsRow + writeStartRow, valueString);
+                                    excelSheet.addCell(labelCell);
+                                } else if (valueCell.getType() == CellType.NUMBER) {
+                                    NumberCell numCell = (NumberCell) valueCell;
+                                    double num = numCell.getValue();
+                                    Number numberCell = new Number(cdOfP.getOrderNo(), dsRow + writeStartRow, num);
+                                    excelSheet.addCell(numberCell);
+                                } else if (valueCell.getType() == CellType.DATE) {
+                                    DateCell dateCell = (DateCell) valueCell;
+                                    Date date = dateCell.getDate();
+                                    DateTime dateTimeCell = new DateTime(cdOfP.getOrderNo(), dsRow + writeStartRow, date);
+                                    excelSheet.addCell(dateTimeCell);
+                                } else {
+                                    Label label = new Label(cdOfP.getOrderNo(), dsRow + writeStartRow, valueString);
+                                    excelSheet.addCell(label);
+                                }
+
+                                dsRow++;
                             }
-
-                            
-
-                            dsRow++;
                         }
+                        valueExtractCol++;
                     }
-                    valueExtractCol++;
+                    writeStartRow = writeStartRow + dsRow;
+                    rowNo++;
                 }
-                writeStartRow = writeStartRow + dsRow;
-                rowNo++;
 
             }
 
             myFirstWbook.write();
 
         } catch (IOException | WriteException e) {
+            System.out.println("e1 = " + e.getMessage());
         } finally {
 
             if (myFirstWbook != null) {
                 try {
                     myFirstWbook.close();
                 } catch (IOException | WriteException e) {
+                    System.out.println("e2 = " + e.getMessage());
                 }
             }
 
@@ -335,7 +357,7 @@ public class DataMergeController implements Serializable {
             stream = new FileInputStream(newFile);
             downloafFile = new DefaultStreamedContent(stream, "application/xls", newFile.getAbsolutePath());
         } catch (FileNotFoundException ex) {
-            System.out.println("ex = " + ex.getMessage());
+            System.out.println("ex3 = " + ex.getMessage());
         }
 
     }

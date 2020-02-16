@@ -56,7 +56,7 @@
                                              action="#{dataMergeController.updateDataColumnOfSelectedDataSource}" ></p:commandButton>
 
                             <p:commandButton ajax="false" value="Download Mapping" >
-                                <p:dataExporter target="tbl" fileName="Mapping data of #{dataMergeController.updateDataColumnOfSelectedDataSource}" type="xls" ></p:dataExporter>
+                                <p:dataExporter target="tbl1" fileName="Mapping data of #{dataMergeController.selectedDataSource.fileName}" type="xls" ></p:dataExporter>
                             </p:commandButton>
 
 
@@ -82,13 +82,14 @@
                                     <p:outputLabel value="#{c.name}" ></p:outputLabel>
                                 </p:column>
 
-                                <p:column headerText="Mapped To" sortBy="#{c.referance.name}">
+                                <p:column headerText="Mapped To" sortBy="#{c.referance.name}"
+                                          >
                                     <p:outputLabel id="lblRef" value="#{c.referance.name}" >
                                     </p:outputLabel>
                                 </p:column>
 
-                                <p:column headerText="Exit Mapped To" exportable="false" >
-                                    <p:selectOneMenu id="cmbRef" value="#{c.referance}" >
+                                <p:column headerText="Edit Mapped To" exportable="false" >
+                                    <p:selectOneMenu id="cmbRef" value="#{c.referance}"  filter="true" filterMatchMode="startsWith" >
                                         <f:selectItem itemLabel="Please select" ></f:selectItem>
                                         <f:selectItems value="#{dataMergeController.dataColumnsMasterOfSelectedProject}"
                                                        var="pc" itemLabel="#{pc.name}" itemValue="#{pc}" ></f:selectItems>

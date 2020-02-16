@@ -96,7 +96,7 @@ public class DataSource implements Serializable {
     private Date retiredAt;
     private String retireComments;
     
-    
+    private boolean selected;
 
     public Long getId() {
         return id;
@@ -106,6 +106,8 @@ public class DataSource implements Serializable {
         this.id = id;
     }
 
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -281,6 +283,14 @@ public class DataSource implements Serializable {
 
     public void setDataEndColumn(Integer dataEndColumn) {
         this.dataEndColumn = dataEndColumn;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
     
     
