@@ -71,6 +71,15 @@
                                     <p:outputLabel value="#{c.name}" ></p:outputLabel>
                                 </p:column>
 
+                                <p:column headerText="Mapped To">
+                                    <p:selectOneMenu id="cmbRef" value="#{c.referance}" >
+                                        <f:selectItem itemLabel="Please select" ></f:selectItem>
+                                        <f:selectItems value="#{dataMergeController.dataColumnsMasterOfSelectedProject}"
+                                                       var="pc" itemLabel="#{pc.name}" itemValue="#{pc}" ></f:selectItems>
+                                        <p:ajax event="change" process="cmbRef"  ></p:ajax>
+                                    </p:selectOneMenu>
+                                </p:column>
+
 
                             </p:dataTable>
 

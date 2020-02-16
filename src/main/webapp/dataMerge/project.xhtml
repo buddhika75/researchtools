@@ -86,6 +86,11 @@
                                         <p:outputLabel value="#{c.name}"  >
                                         </p:outputLabel>
                                     </p:column>
+                                    <p:column headerText="Order No" >
+                                        <p:inputText id="txtOrderNo" value="#{c.orderNo}"  >
+                                            <f:ajax event="blur" execute="txtOrderNo" listener="#{dataMergeController.updateDataColumn(c)}" ></f:ajax>
+                                        </p:inputText>
+                                    </p:column>
                                     <p:column headerText="Data Type" >
                                         <p:outputLabel value="#{c.dataType}"  >
                                         </p:outputLabel>

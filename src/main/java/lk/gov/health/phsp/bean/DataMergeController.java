@@ -277,8 +277,23 @@ public class DataMergeController implements Serializable {
                             Cell valueCell = dsf.getSheet().getCell(valueExtractCol, valueExtractRow);
                             String valueString = valueCell.getContents();
 
-                            Label label = new Label(cdOfP.getOrderNo(), dsRow + writeStartRow, valueString);
-                            excelSheet.addCell(label);
+                            Integer valueInt = CommonController.getIntegerValue(valueString);
+
+                            if (valueInt == null) {
+
+                                Double valueDouble = CommonController.getDoubleValue(valueString);
+                                if (valueDouble == null) {
+                                    Label label = new Label(cdOfP.getOrderNo(), dsRow + writeStartRow, valueString);
+                                    excelSheet.addCell(label);
+                                } else {
+                                    Number number = new Number(cdOfP.getOrderNo(), dsRow + writeStartRow, valueDouble);
+                                    excelSheet.addCell(number);
+                                }
+
+                            } else {
+                                Number number = new Number(cdOfP.getOrderNo(), dsRow + writeStartRow, valueInt);
+                                excelSheet.addCell(number);
+                            }
 
                             dsRow++;
                         }
@@ -290,40 +305,15 @@ public class DataMergeController implements Serializable {
 
             }
 
-            // add something into the Excel sheet
-            Label label = new Label(0, 0, "Test Count");
-            excelSheet.addCell(label);
-
-            Number number = new Number(0, 1, 1);
-            excelSheet.addCell(number);
-
-            label = new Label(1, 0, "Result");
-            excelSheet.addCell(label);
-
-            label = new Label(1, 1, "Passed");
-            excelSheet.addCell(label);
-
-            number = new Number(0, 2, 2);
-            excelSheet.addCell(number);
-
-            label = new Label(1, 2, "Passed 2");
-            excelSheet.addCell(label);
-
             myFirstWbook.write();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (WriteException e) {
-            e.printStackTrace();
+        } catch (IOException | WriteException e) {
         } finally {
 
             if (myFirstWbook != null) {
                 try {
                     myFirstWbook.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (WriteException e) {
-                    e.printStackTrace();
+                } catch (IOException | WriteException e) {
                 }
             }
 
