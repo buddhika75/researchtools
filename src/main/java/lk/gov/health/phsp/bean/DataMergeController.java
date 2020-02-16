@@ -259,6 +259,9 @@ public class DataMergeController implements Serializable {
             rowNo = 1;
 
             for (DataSource ds : dataSourcesOfSelectedProject) {
+
+                mergingMessage = "Data Source - " + ds.getFileName();
+
                 DataSourceFile dsf = new DataSourceFile(ds);
 
                 Cell tc = dsf.getSheet().getCell(0, 0);
@@ -270,7 +273,11 @@ public class DataMergeController implements Serializable {
 
                 for (DataColumn colOfDs : dataColumnsOfDataSource) {
                     if (colOfDs.getReferance() != null) {
+
                         DataColumn cdOfP = colOfDs.getReferance();
+
+                        mergingMessage += "\n" + "Column " + cdOfP.getName();
+
                         dsRow = 0;
                         for (int valueExtractRow = ds.getDataStartRow(); valueExtractRow < (ds.getDataEndRow() + 1); valueExtractRow++) {
 
