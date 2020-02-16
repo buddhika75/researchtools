@@ -63,6 +63,10 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
+import jxl.BooleanFormulaCell;
+import jxl.CellType;
+import jxl.DateCell;
+import jxl.NumberCell;
 import lk.gov.health.phsp.pojcs.DataSourceFile;
 import org.apache.commons.io.IOUtils;
 import org.primefaces.model.DefaultStreamedContent;
@@ -280,27 +284,27 @@ public class DataMergeController implements Serializable {
 
                         dsRow = 0;
                         for (int valueExtractRow = ds.getDataStartRow(); valueExtractRow < (ds.getDataEndRow() + 1); valueExtractRow++) {
-
                             Cell valueCell = dsf.getSheet().getCell(valueExtractCol, valueExtractRow);
                             String valueString = valueCell.getContents();
-
-                            Integer valueInt = CommonController.getIntegerValue(valueString);
-
-                            if (valueInt == null) {
-
-                                Double valueDouble = CommonController.getDoubleValue(valueString);
-                                if (valueDouble == null) {
-                                    Label label = new Label(cdOfP.getOrderNo(), dsRow + writeStartRow, valueString);
-                                    excelSheet.addCell(label);
-                                } else {
-                                    Number number = new Number(cdOfP.getOrderNo(), dsRow + writeStartRow, valueDouble);
-                                    excelSheet.addCell(number);
-                                }
-
-                            } else {
-                                Number number = new Number(cdOfP.getOrderNo(), dsRow + writeStartRow, valueInt);
-                                excelSheet.addCell(number);
+                            if (valueCell.getType() == CellType.LABEL) {
+                                Label labelCell = new Label(cdOfP.getOrderNo(), dsRow + writeStartRow, valueString);
+                                excelSheet.addCell(labelCell);
+                            } else if (valueCell.getType() == CellType.NUMBER) {
+                                NumberCell numCell = (NumberCell) valueCell;
+                                double num = numCell.getValue();
+                                Number numberCell = new Number(cdOfP.getOrderNo(), dsRow + writeStartRow, num);
+                                excelSheet.addCell(numberCell);
+                            } else if (valueCell.getType() == CellType.DATE) {
+                                DateCell dateCell = (DateCell) valueCell;
+                                Date date = dateCell.getDate();
+                                DateTime dateTimeCell = new DateTime(cdOfP.getOrderNo(), dsRow + writeStartRow, date);
+                                excelSheet.addCell(dateTimeCell);
+                            }  else {
+                                Label label = new Label(cdOfP.getOrderNo(), dsRow + writeStartRow, valueString);
+                                excelSheet.addCell(label);
                             }
+
+                            
 
                             dsRow++;
                         }

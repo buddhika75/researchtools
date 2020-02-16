@@ -52,26 +52,42 @@
                                              action="#{dataMergeController.toViewSelectedProject()}" >
                             </p:commandButton>
 
+                            <p:commandButton ajax="false" value="Update Mapping" 
+                                             action="#{dataMergeController.updateDataColumnOfSelectedDataSource}" ></p:commandButton>
 
+                            <p:commandButton ajax="false" value="Download Mapping" >
+                                <p:dataExporter target="tbl" fileName="Mapping data of #{dataMergeController.updateDataColumnOfSelectedDataSource}" type="xls" ></p:dataExporter>
+                            </p:commandButton>
 
 
                         </p:panelGrid>
 
-
-
                         <p:panelGrid columns="1" >
 
-                            <p:commandButton ajax="false" value="Update" action="#{dataMergeController.updateDataColumnOfSelectedDataSource}" ></p:commandButton>
-
-
-                            <p:dataTable value="#{dataMergeController.dataColumnsOfSelectedDataSource}" var="c" 
+                            <p:dataTable value="#{dataMergeController.dataColumnsOfSelectedDataSource}"
+                                         rowKey="#{c.id}"
+                                         var="c" 
                                          id="tbl1"
-                                         >
+                                         rowIndexVar="n">
+
+                                <f:facet name="header" >
+                                    <p:outputLabel value="#{dataMergeController.selectedDataSource.name}" ></p:outputLabel>
+                                </f:facet>
+
+                                <p:column headerText="No" width="50">
+                                    <p:outputLabel value="#{n+1}" ></p:outputLabel>
+                                </p:column>
+                                
                                 <p:column headerText="Name">
                                     <p:outputLabel value="#{c.name}" ></p:outputLabel>
                                 </p:column>
 
-                                <p:column headerText="Mapped To">
+                                <p:column headerText="Mapped To" sortBy="#{c.referance.name}">
+                                    <p:outputLabel id="lblRef" value="#{c.referance.name}" >
+                                    </p:outputLabel>
+                                </p:column>
+
+                                <p:column headerText="Exit Mapped To" exportable="false" >
                                     <p:selectOneMenu id="cmbRef" value="#{c.referance}" >
                                         <f:selectItem itemLabel="Please select" ></f:selectItem>
                                         <f:selectItems value="#{dataMergeController.dataColumnsMasterOfSelectedProject}"

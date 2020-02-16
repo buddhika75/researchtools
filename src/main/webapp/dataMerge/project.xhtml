@@ -11,8 +11,8 @@
         <ui:composition template="/template.xhtml">
 
             <ui:define name="content">
-                
-                 <h:form>
+
+                <h:form>
                     <p:outputLabel id="msg" value="#{dataMergeController.mergingMessage}" ></p:outputLabel>
                     <p:poll update="msg" ></p:poll>
                 </h:form>
@@ -56,12 +56,21 @@
                                 <p:fileDownload value="#{dataMergeController.downloafFile}" />
                             </p:commandButton>
 
-                           
+
                         </p:panelGrid>
 
                         <p:tabView >
                             <p:tab title="Files" >
-                                <p:dataTable value="#{dataMergeController.dataSourcesOfSelectedProject}" var="ds" >
+                                <p:dataTable value="#{dataMergeController.dataSourcesOfSelectedProject}" 
+                                             var="ds"
+                                             rowKey="#{ds.id}"
+                                             rowIndexVar="n">
+                                    <f:facet name="header" >
+                                        <p:outputLabel value="#{dataMergeController.selectedProject.name}" ></p:outputLabel>
+                                    </f:facet>
+                                    <p:column headerText="No" width="50">
+                                        <p:outputLabel value="#{n+1}" ></p:outputLabel>
+                                    </p:column>
                                     <p:column headerText="File Name" >
                                         <p:outputLabel value="#{ds.name}"  >
                                         </p:outputLabel>
@@ -78,7 +87,7 @@
                                         <p:spacer height="1" width="10" ></p:spacer>
                                         <p:commandLink value="Remove" ajax="false"
                                                        onclick="if (!confirm('Are you sure?'))
-                                                                    return false;" 
+                                                                   return false;" 
                                                        action="#{dataMergeController.toViewSelectedProject()}" actionListener="#{dataMergeController.removeDataSource()}" >
                                             <f:setPropertyActionListener value="#{ds}" target="#{dataMergeController.removingDataSource}" ></f:setPropertyActionListener>
                                         </p:commandLink>
@@ -127,7 +136,7 @@
 
                 </h:form>
 
-                
+
 
 
             </ui:define>

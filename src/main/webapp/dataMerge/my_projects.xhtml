@@ -16,8 +16,10 @@
 
                     <p:panel header="My Projects" >
 
-                        <p:dataTable value="#{dataMergeController.myProjects}" var="p" rowIndexVar="n" 
+                        <p:dataTable value="#{dataMergeController.myProjects}" var="p" 
+                                     rowIndexVar="n" 
                                      rowKey="#{p.id}"  >
+                            
                             <p:column headerText="Name" >
                                 <p:outputLabel id="txtName" value="#{p.name}" >
                                 </p:outputLabel>
