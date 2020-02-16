@@ -46,26 +46,7 @@
 
                     </p:panelGrid>
 
-                    <p:dataTable id="tbl" var="car" 
-                                 value="#{dataMergeController.dataRowsOfSelectedProject}"
-                                 rowIndexVar="rowIndex"
-
-                                 rows="10"
-                                 paginator="true"
-                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 rowsPerPageTemplate="10,50,100,250"
-
-                                 > 
-                       
-                        <p:columns value="#{dataMergeController.dataColumnModelssOfSelectedProject}"
-                                   var="column" 
-                                   columnIndexVar="colIndex" >
-                            <f:facet name="header">
-                                <h:outputText value="#{column.header}" />
-                            </f:facet>
-                            <h:outputText value="#{dataMergeController.uploadedValueOfSelectedProject(colIndex, rowIndex)}" />
-                        </p:columns>
-                    </p:dataTable>
+              
 
                 </h:form>
 

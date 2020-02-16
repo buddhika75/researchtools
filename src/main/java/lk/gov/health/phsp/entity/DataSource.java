@@ -23,14 +23,31 @@
  */
 package lk.gov.health.phsp.entity;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+import lk.gov.health.phsp.facade.util.JsfUtil;
 
 /**
  *
@@ -43,23 +60,24 @@ public class DataSource implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     @ManyToOne
     private Project project;
     private String name;
     private String fileName;
     private String fileType;
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
     private byte[] fileContents;
-    
+
     private int orderNo;
-    
-     private Integer dataStartRow = 1;
+
+    private Integer dataStartRow = 1;
     private Integer dataStartColumn = 0;
     private Integer dataHeaderRow = 0;
     private Integer dataEndRow = null;
     private Integer dataEndColumn = null;
-    
-   
+
     //Created Properties
     @ManyToOne
     private WebUser createdBy;
@@ -77,7 +95,7 @@ public class DataSource implements Serializable {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date retiredAt;
     private String retireComments;
-
+    
     
 
     public Long getId() {
@@ -87,8 +105,6 @@ public class DataSource implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
-    
 
     @Override
     public int hashCode() {
@@ -267,4 +283,10 @@ public class DataSource implements Serializable {
         this.dataEndColumn = dataEndColumn;
     }
     
+    
+  
+    
+    
+    
+
 }

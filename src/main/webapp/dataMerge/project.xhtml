@@ -31,10 +31,10 @@
                             <p:inputTextarea value="#{dataMergeController.selectedProject.description}" >
                                 <f:ajax event="blur" execute="@this" listener="#{dataMergeController.updateProject(dataMergeController.selectedProject)}" ></f:ajax>
                             </p:inputTextarea>
-                            
-                            
-                        
-                            
+
+
+
+
                         </p:panelGrid>
 
 
@@ -45,9 +45,13 @@
                             </p:commandButton>
                             <p:commandButton ajax="false" value="Upload Another File" action="#{dataMergeController.toAddANewDataSourceForTheProject()}" >
                             </p:commandButton>
-                            <p:commandButton ajax="false" value="Compile All Data" 
-                                             action="#{dataMergeController.toComplieAllData()}" >
+
+                            <p:commandButton id="downloadLink" value="Download" ajax="false"
+                                             actionListener="#{dataMergeController.downloadAllData()}">
+                                <p:fileDownload value="#{dataMergeController.downloafFile}" />
                             </p:commandButton>
+
+                           
                         </p:panelGrid>
 
                         <p:tabView >
@@ -68,7 +72,8 @@
                                         </p:commandLink>
                                         <p:spacer height="1" width="10" ></p:spacer>
                                         <p:commandLink value="Remove" ajax="false"
-                                                        onclick="if (!confirm('Are you sure?')) return false;" 
+                                                       onclick="if (!confirm('Are you sure?'))
+                                                                    return false;" 
                                                        action="#{dataMergeController.toViewSelectedProject()}" actionListener="#{dataMergeController.removeDataSource()}" >
                                             <f:setPropertyActionListener value="#{ds}" target="#{dataMergeController.removingDataSource}" ></f:setPropertyActionListener>
                                         </p:commandLink>
@@ -87,17 +92,18 @@
                                     </p:column>
                                     <p:column headerText="Actions" >
                                         <p:commandButton value="Remove" process="@this" update="cols" action="#{dataMergeController.removeDataColumn()}"
-                                                         onclick="if (!confirm('Are you sure?')) return false;"       >
+                                                         onclick="if (!confirm('Are you sure?'))
+                                                                     return false;"       >
                                             <f:setPropertyActionListener value="#{c}" 
                                                                          target="#{dataMergeController.removingDataColumn}"
-                                                                         
+
                                                                          >
                                             </f:setPropertyActionListener>
                                         </p:commandButton>
                                     </p:column>
                                 </p:dataTable>
                             </p:tab>
-                          
+
 
                         </p:tabView>
 
