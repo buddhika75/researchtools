@@ -62,7 +62,7 @@
                         <p:tabView >
                             <p:tab title="Files" >
                                 <p:dataTable value="#{dataMergeController.dataSourcesOfSelectedProject}" 
-                                             var="ds" id="tbl"
+                                             var="ds" id="tbl" reflow="true"
                                              rowKey="#{ds.id}"
                                              rowIndexVar="n">
                                     <f:facet name="header" >
@@ -90,8 +90,10 @@
                                     </p:column>
                                     <p:column headerText="Actions">
 
-                                        <p:commandLink id="btnSelect" value="Toggle Selection to Download" process="@this" update="tbl"
+                                        <p:commandLink id="btnSelect" process="@this" update="tbl"
                                                        action="#{dataMergeController.toToggleSelectionOfDatasource()}" >
+                                             <p:outputLabel value="#{ds.selected?'Deselect':'Select'}"  >
+                                        </p:outputLabel>
                                             <f:setPropertyActionListener value="#{ds}" target="#{dataMergeController.selectedDataSource}" ></f:setPropertyActionListener>
                                         </p:commandLink>
                                         <p:spacer height="1" width="10" ></p:spacer>
@@ -109,12 +111,19 @@
                                 </p:dataTable>
                             </p:tab>
                             <p:tab title="Project Columns" >
-                                <p:dataTable id="cols" value="#{dataMergeController.dataColumnsMasterOfSelectedProject}" var="c" >
-                                    <p:column headerText="Column Name" >
-                                        <p:outputLabel value="#{c.name}"  >
-                                        </p:outputLabel>
+                                
+                                <p:commandButton value="Add Another Column" ajax="false"
+                                                 action="#{dataMergeController.addAColumnForSelectedProject()}">
+                                </p:commandButton>
+                                
+                                <p:dataTable id="cols" value="#{dataMergeController.dataColumnsMasterOfSelectedProject}" var="c"
+                                             reflow="true" >
+                                    <p:column headerText="Name" sortBy="#{c.name}" filterBy="#{c.name}" filterMatchMode="contains" >
+                                        <p:inputText id="txtName" value="#{c.name}"  >
+                                            <f:ajax event="blur" execute="txtName" listener="#{dataMergeController.updateDataColumn(c)}" ></f:ajax>
+                                        </p:inputText>
                                     </p:column>
-                                    <p:column headerText="Order No" >
+                                    <p:column headerText="Order No" sortBy="#{c.orderNo}" >
                                         <p:inputText id="txtOrderNo" value="#{c.orderNo}"  >
                                             <f:ajax event="blur" execute="txtOrderNo" listener="#{dataMergeController.updateDataColumn(c)}" ></f:ajax>
                                         </p:inputText>

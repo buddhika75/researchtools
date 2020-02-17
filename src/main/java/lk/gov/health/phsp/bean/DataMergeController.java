@@ -178,6 +178,17 @@ public class DataMergeController implements Serializable {
         fillMasterDataColumnsOfSelectedProject();
         return "/dataMerge/project";
     }
+    
+    public void addAColumnForSelectedProject() {
+        DataColumn ndc= new DataColumn();
+        ndc.setCreatedAt(new Date());
+        ndc.setCreatedBy(webUserController.getLoggedUser());
+        ndc.setProject(selectedProject);
+        ndc.setName("New Column");
+        ndc.setOrderNo(dataColumnsOfSelectedProject.size() );
+        getDataColumnFacade().create(ndc);
+        fillMasterDataColumnsOfSelectedProject();
+    }
 
     public String toViewSelectedDatasource() {
         if (selectedDataSource == null) {

@@ -68,7 +68,8 @@
                                          rowKey="#{c.id}"
                                          var="c" 
                                          id="tbl1"
-                                         rowIndexVar="n">
+                                         rowIndexVar="n"
+                                         reflow="true">
 
                                 <f:facet name="header" >
                                     <p:outputLabel value="#{dataMergeController.selectedDataSource.name}" ></p:outputLabel>
@@ -79,12 +80,15 @@
                                 </p:column>
                                 
                                 <p:column headerText="Name">
-                                    <p:outputLabel value="#{c.name}" ></p:outputLabel>
+                                    <p:outputLabel value="#{c.name}"
+                                                   style="#{c.referance.name eq null ?'color:red;':''}"
+                                                   ></p:outputLabel>
                                 </p:column>
 
                                 <p:column headerText="Mapped To" sortBy="#{c.referance.name}"
                                           >
-                                    <p:outputLabel id="lblRef" value="#{c.referance.name}" >
+                                    <p:outputLabel id="lblRef" value="#{c.referance.name}" 
+                                                   style="#{c.name eq c.referance.name ?'':'color:blue;'}">
                                     </p:outputLabel>
                                 </p:column>
 
