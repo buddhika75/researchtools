@@ -90,8 +90,8 @@
                                     </p:column>
                                     <p:column headerText="Actions">
 
-                                        <p:commandLink id="btnSelect" value="Select" process="@this" update="tbl"
-                                                       action="#{dataMergeController.toSelectDatasource()}" >
+                                        <p:commandLink id="btnSelect" value="Toggle Selection to Download" process="@this" update="tbl"
+                                                       action="#{dataMergeController.toToggleSelectionOfDatasource()}" >
                                             <f:setPropertyActionListener value="#{ds}" target="#{dataMergeController.selectedDataSource}" ></f:setPropertyActionListener>
                                         </p:commandLink>
                                         <p:spacer height="1" width="10" ></p:spacer>

@@ -188,12 +188,12 @@ public class DataMergeController implements Serializable {
         return "/dataMerge/data_source";
     }
 
-    public void toSelectDatasource() {
+    public void toToggleSelectionOfDatasource() {
         if (selectedDataSource == null) {
             JsfUtil.addErrorMessage("No datasource");
             return;
         }
-        selectedDataSource.setSelected(true);
+        selectedDataSource.setSelected(!selectedDataSource.isSelected());
         getDataSourceFacade().edit(selectedDataSource);
     }
 
