@@ -36,9 +36,6 @@ import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
 import javax.inject.Inject;
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.read.biff.BiffException;
 import lk.gov.health.phsp.entity.DataColumn;
 
 import lk.gov.health.phsp.entity.DataSource;
@@ -52,23 +49,21 @@ import lk.gov.health.phsp.facade.ProjectFacade;
 import lk.gov.health.phsp.facade.util.JsfUtil;
 import org.primefaces.model.UploadedFile;
 
-import jxl.Workbook;
-import jxl.write.*;
-import jxl.write.Number;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.context.FacesContext;
-import jxl.BooleanFormulaCell;
-import jxl.CellType;
-import jxl.DateCell;
-import jxl.NumberCell;
 import lk.gov.health.phsp.pojcs.DataSourceFile;
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -78,7 +73,7 @@ import org.primefaces.model.StreamedContent;
  */
 @Named
 @SessionScoped
-public class DataMergeController implements Serializable {
+public class DataMergeControllerXlsx implements Serializable {
 
     @EJB
     private ProjectFacade projectFacade;
@@ -101,7 +96,6 @@ public class DataMergeController implements Serializable {
     private DataSource selectedDataSource;
 
     private List<DataSource> dataSourcesOfSelectedProject;
-    private List<DataSource> selectedDataSourcesOfSelectedProject;
     private List<Project> myProjects;
 
     private List<DataColumn> dataColumnsMasterOfSelectedProject;
@@ -129,7 +123,7 @@ public class DataMergeController implements Serializable {
     /**
      * Creates a new instance of DataMerge
      */
-    public DataMergeController() {
+    public DataMergeControllerXlsx() {
     }
 
     public String removeProject() {
@@ -255,125 +249,125 @@ public class DataMergeController implements Serializable {
     }
 
     public void downloadAllData() {
-        if (selectedProject == null) {
-            JsfUtil.addErrorMessage("Select a Project");
-            return;
-        }
-        createColumnsForSelectedProject();
+//        if (selectedProject == null) {
+//            JsfUtil.addErrorMessage("Select a Project");
+//            return;
+//        }
+//        createColumnsForSelectedProject();
+//
+//        Workbook wb = new XSSFWorkbook();
+//
+//        try (OutputStream fileOut = new FileOutputStream("/tmp/" + selectedProject.getName() + (new Date()).getTime() + ".xlsx")) {
+//            wb.write(fileOut);
+//        } catch (FileNotFoundException ex) {
+//            Logger.getLogger(DataMergeControllerXlsx.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (IOException ex) {
+//            Logger.getLogger(DataMergeControllerXlsx.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//
+//        File newFile = new File("/tmp/" + selectedProject.getName() + (new Date()).getTime() + ".xlsx");
+//
+//        Sheet sheet = wb.createSheet(selectedProject.getName());
+//
+//        CreationHelper createHelper = wb.getCreationHelper();
+//
+//        int colNo = 0;
+//        int rowNo = 0;
+//        int writeStartRow = 1;
+//
+//        for (DataColumn pc : dataColumnsOfSelectedProject) {
+//            Row row = sheet.createRow(0);
+//            Cell cell = row.createCell(colNo);
+//            cell.setCellValue(pc.getName());
+//            colNo++;
+//        }
+//
+//        rowNo = 1;
+//
+//        for (DataSource ds : dataSourcesOfSelectedProject) {
+//
+//            if (ds.isSelected()) {
+//
+//                mergingMessage = "Data Source - " + ds.getFileName();
+//
+//                System.out.println("Data Source - " + ds.getFileName());
+//
+//                DataSourceFile dsf = new DataSourceFile(ds);
+//
+//                Cell tc = dsf.getSheet().getCell(0, 0);
+//
+//                List<DataColumn> dataColumnsOfDataSource = findDataColumnsOfADataSource(ds);
+//
+//                int valueExtractCol = ds.getDataStartColumn();
+//                int dsRow = 0;
+//
+//                for (DataColumn colOfDs : dataColumnsOfDataSource) {
+//
+//                    System.out.println("colOfDs.getName() = " + colOfDs.getName());
+//
+//                    if (colOfDs.getReferance() != null) {
+//
+//                        DataColumn cdOfP = colOfDs.getReferance();
+//
+//                        System.out.println("colOfDs.getReferance().getName() = " + colOfDs.getReferance().getName());
+//
+//                        mergingMessage += "<br/>" + "Column " + cdOfP.getName();
+//
+//                        dsRow = 0;
+//                        for (int valueExtractRow = ds.getDataStartRow(); valueExtractRow < (ds.getDataEndRow() + 1); valueExtractRow++) {
+//
+//                            Row row = sheet.getRow(dsRow + writeStartRow);
+//                            
+//                            System.out.println("col:row = " + cdOfP.getOrderNo() + ":" + (dsRow + writeStartRow));
+//
+//                            Cell valueCell = dsf.getSheet().getCell(valueExtractCol, valueExtractRow);
+//                            
+//                            Row valueRow = 
+//                            
+//                            String valueString = valueCell.getContents();
+//                            if (valueCell.getType() == CellType.LABEL) {
+//                                Label labelCell = new Label(cdOfP.getOrderNo(), dsRow + writeStartRow, valueString);
+//                                excelSheet.addCell(cdOfP.getOrderNo());
+//                                
+//                                Cell targetCell = row.getCell(0);
+//                                
+//                            } else if (valueCell.getType() == CellType.NUMBER) {
+//                                NumberCell numCell = (NumberCell) valueCell;
+//                                double num = numCell.getValue();
+//                                Number numberCell = new Number(cdOfP.getOrderNo(), dsRow + writeStartRow, num);
+//                                excelSheet.addCell(numberCell);
+//                            } else if (valueCell.getType() == CellType.DATE) {
+//                                DateCell dateCell = (DateCell) valueCell;
+//                                Date date = dateCell.getDate();
+//                                DateTime dateTimeCell = new DateTime(cdOfP.getOrderNo(), dsRow + writeStartRow, date);
+//                                excelSheet.addCell(dateTimeCell);
+//                            } else {
+//                                Label label = new Label(cdOfP.getOrderNo(), dsRow + writeStartRow, valueString);
+//                                excelSheet.addCell(label);
+//                            }
+//
+//                            dsRow++;
+//                        }
+//                    }
+//                    valueExtractCol++;
+//                }
+//                writeStartRow = writeStartRow + dsRow;
+//                rowNo++;
+//            }
+//
+//        }
+//
+//        OutputStream fileOut = new FileOutputStream("workbook.xls");
+//
+//        wb.write(fileOut);
+//
+//    
 
-        //1. Create an Excel file
-        WritableWorkbook myFirstWbook = null;
-        File newFile = new File("/tmp/" + selectedProject.getName() + (new Date()).getTime() + ".xls");
-        try {
 
-            myFirstWbook = Workbook.createWorkbook(newFile);
 
-            // create an Excel sheet
-            WritableSheet excelSheet = myFirstWbook.createSheet("Sheet 1", 0);
+}
 
-            int colNo = 0;
-            int rowNo = 0;
-            int writeStartRow = 1;
-
-            for (DataColumn pc : dataColumnsOfSelectedProject) {
-                Label label = new Label(colNo, rowNo, pc.getName());
-                excelSheet.addCell(label);
-                colNo++;
-            }
-
-            rowNo = 1;
-
-            for (DataSource ds : selectedDataSourcesOfSelectedProject) {
-
-                mergingMessage = "Current Data Source - " + ds.getFileName();
-
-                DataSourceFile dsf = new DataSourceFile(ds);
-
-                Cell tc = dsf.getSheet().getCell(0, 0);
-
-                List<DataColumn> dataColumnsOfDataSource = findDataColumnsOfADataSource(ds);
-
-                int valueExtractCol = ds.getDataStartColumn();
-                int dsRow = 0;
-
-                for (DataColumn colOfDs : dataColumnsOfDataSource) {
-
-                    System.out.println("colOfDs.getName() = " + colOfDs.getName());
-
-                    if (colOfDs.getReferance() != null) {
-
-                        DataColumn cdOfP = colOfDs.getReferance();
-
-                        System.out.println("colOfDs.getReferance().getName() = " + colOfDs.getReferance().getName());
-
-                        dsRow = 0;
-                        for (int valueExtractRow = ds.getDataStartRow(); valueExtractRow < (ds.getDataEndRow() + 1); valueExtractRow++) {
-
-                            System.out.println("col:row = " + cdOfP.getOrderNo() + ":" + (dsRow + writeStartRow));
-
-                            Cell valueCell = dsf.getSheet().getCell(valueExtractCol, valueExtractRow);
-                            String valueString = valueCell.getContents();
-                            if (valueCell.getType() == CellType.LABEL) {
-                                Label labelCell = new Label(cdOfP.getOrderNo(), dsRow + writeStartRow, valueString);
-                                excelSheet.addCell(labelCell);
-                            } else if (valueCell.getType() == CellType.NUMBER) {
-                                NumberCell numCell = (NumberCell) valueCell;
-                                double num = numCell.getValue();
-                                Number numberCell = new Number(cdOfP.getOrderNo(), dsRow + writeStartRow, num);
-                                excelSheet.addCell(numberCell);
-                            } else if (valueCell.getType() == CellType.DATE) {
-                                DateCell dateCell = (DateCell) valueCell;
-                                Date date = dateCell.getDate();
-                                DateTime dateTimeCell = new DateTime(cdOfP.getOrderNo(), dsRow + writeStartRow, date);
-                                excelSheet.addCell(dateTimeCell);
-                            } else {
-                                Label label = new Label(cdOfP.getOrderNo(), dsRow + writeStartRow, valueString);
-                                excelSheet.addCell(label);
-                            }
-
-                            dsRow++;
-                        }
-                    }
-                    valueExtractCol++;
-                }
-                writeStartRow = writeStartRow + dsRow;
-                rowNo++;
-
-            }
-            mergingMessage = "Writing to file ";
-            myFirstWbook.write();
-
-        } catch (IOException | WriteException e) {
-            System.out.println("e1 = " + e.getMessage());
-            mergingMessage = "Error - " + e.getMessage();
-        } finally {
-
-            if (myFirstWbook != null) {
-                try {
-                    myFirstWbook.close();
-                    mergingMessage = "Closing File." ;
-                } catch (IOException | WriteException e) {
-                    System.out.println("e2 = " + e.getMessage());
-                    mergingMessage = "Error - " + e.getMessage();
-                }
-            }
-
-        }
-
-        mergingMessage = "Ready for Download";
-        InputStream stream;
-        try {
-            stream = new FileInputStream(newFile);
-            downloafFile = new DefaultStreamedContent(stream, "application/xls", newFile.getAbsolutePath());
-        } catch (FileNotFoundException ex) {
-            System.out.println("ex3 = " + ex.getMessage());
-            mergingMessage = "Error - " + ex.getMessage();
-        }
-        mergingMessage = "";
-
-    }
-
-    public void fillDataSourcesOfSelectedProject() {
+public void fillDataSourcesOfSelectedProject() {
         String j = "select ds from DataSource ds "
                 + " where ds.retired=:ret "
                 + " and ds.project=:pro"
@@ -444,150 +438,151 @@ public class DataMergeController implements Serializable {
 
     public String uploadFileToMerge() {
 
-        System.out.println("uploadFileToMerge");
-
-        mergingCount = 0l;
-        mergingMessage = "Uploading";
-
-        if (file == null) {
-            JsfUtil.addErrorMessage("Error in Uploading file. No such file");
-            return "";
-        }
-
-        if (file.getFileName() == null) {
-            JsfUtil.addErrorMessage("Error in Uploading file. No such file name.");
-            return "";
-        }
-
-        if (selectedProject == null) {
-            selectedProject = createAndSaveANewProject();
-        } else if (selectedProject.getId() == null) {
-            getProjectFacade().create(selectedProject);
-        } else {
-            getProjectFacade().edit(selectedProject);
-        }
-
-        if (selectedDataSource == null) {
-            selectedDataSource = createAndSaveANewDataSource(file.getFileName());
-        } else {
-            selectedDataSource.setProject(selectedProject);
-            selectedDataSource.setCreatedAt(new Date());
-            selectedDataSource.setCreatedBy(webUserController.getLoggedUser());
-            selectedDataSource.setName(file.getFileName());
-            selectedDataSource.setFileName(file.getFileName());
-            if (selectedDataSource.getId() == null) {
-                getDataSourceFacade().create(selectedDataSource);
-            } else {
-                getDataSourceFacade().edit(selectedDataSource);
-            }
-        }
-
-        try {
-
-            File inputWorkbook;
-            Workbook w;
-            Cell cell;
-            InputStream in;
-
-            try {
-
-                in = file.getInputstream();
-                File f;
-                f = new File(Calendar.getInstance().getTimeInMillis() + file.getFileName());
-                FileOutputStream out = new FileOutputStream(f);
-                int read = 0;
-                byte[] bytes = new byte[1024];
-                while ((read = in.read(bytes)) != -1) {
-                    out.write(bytes, 0, read);
-                }
-                in.close();
-                out.flush();
-                out.close();
-
-                inputWorkbook = new File(f.getAbsolutePath());
-
-                writeFileToDataSource(f, selectedDataSource);
-                getDataSourceFacade().edit(selectedDataSource);
-
-                JsfUtil.addSuccessMessage("Excel File Opened");
-                w = Workbook.getWorkbook(inputWorkbook);
-                Sheet sheet = w.getSheet(0);
-
-                if (dataStartRow == null) {
-                    dataStartRow = 1;
-                }
-                if (dataStartColumn == null) {
-                    dataStartColumn = 0;
-                }
-                if (dataEndRow == null) {
-                    dataEndRow = sheet.getRows() - 1;
-                }
-                if (dataEndColumn == null) {
-                    dataEndColumn = sheet.getColumns() - 1;
-                }
-
-                if (dataHeaderRow == null) {
-                    dataHeaderRow = 0;
-                }
-
-                selectedDataSource.setDataStartColumn(dataStartColumn);
-                selectedDataSource.setDataEndColumn(dataEndColumn);
-                selectedDataSource.setDataStartRow(dataStartRow);
-                selectedDataSource.setDataEndRow(dataEndRow);
-                selectedDataSource.setDataHeaderRow(dataHeaderRow);
-
-                getDataSourceFacade().edit(selectedDataSource);
-
-                for (int myCol = dataStartColumn; myCol < (dataEndColumn + 1); myCol++) {
-                    cell = sheet.getCell(myCol, dataHeaderRow);
-
-                    DataColumn col = new DataColumn();
-                    col.setOrderNo(myCol - dataStartColumn);
-                    col.setDataSource(selectedDataSource);
-                    col.setCreatedAt(new Date());
-                    col.setCreatedBy(webUserController.getLoggedUser());
-                    col.setName(cell.getContents());
-                    getDataColumnFacade().create(col);
-
-                    mergingCount++;
-                    mergingMessage = "Creating Columns - " + mergingCount;
-
-                    System.out.println("mergingMessage = " + mergingMessage);
-
-                }
-
-                mergingCount = 0l;
-
-                JsfUtil.addSuccessMessage("Succesful. All the data in Excel File Impoted to the database");
-
-                fillDataForSelectedDatasource();
-
-                mergingMessage = "Updating Master columns for Project";
-                System.out.println("mergingMessage = " + mergingMessage);
-                updateProjectColumns();
-
-                mergingMessage = "FIlling Master columns for Project";
-                System.out.println("mergingMessage = " + mergingMessage);
-                fillMasterDataColumnsOfSelectedProject();
-
-                mergingMessage = "Resetting file date";
-                System.out.println("mergingMessage = " + mergingMessage);
-                resetUploadFileDate();
-
-                mergingMessage = "Finishing";
-                System.out.println("mergingMessage = " + mergingMessage);
-                return toViewSelectedDatasourceWithoutFillingData();
-
-            } catch (IOException ex) {
-                JsfUtil.addErrorMessage(ex.getMessage());
-                return "";
-            } catch (BiffException e) {
-                JsfUtil.addErrorMessage(e.getMessage());
-                return "";
-            }
-        } catch (Exception e) {
-            return "";
-        }
+//        System.out.println("uploadFileToMerge");
+//
+//        mergingCount = 0l;
+//        mergingMessage = "Uploading";
+//
+//        if (file == null) {
+//            JsfUtil.addErrorMessage("Error in Uploading file. No such file");
+//            return "";
+//        }
+//
+//        if (file.getFileName() == null) {
+//            JsfUtil.addErrorMessage("Error in Uploading file. No such file name.");
+//            return "";
+//        }
+//
+//        if (selectedProject == null) {
+//            selectedProject = createAndSaveANewProject();
+//        } else if (selectedProject.getId() == null) {
+//            getProjectFacade().create(selectedProject);
+//        } else {
+//            getProjectFacade().edit(selectedProject);
+//        }
+//
+//        if (selectedDataSource == null) {
+//            selectedDataSource = createAndSaveANewDataSource(file.getFileName());
+//        } else {
+//            selectedDataSource.setProject(selectedProject);
+//            selectedDataSource.setCreatedAt(new Date());
+//            selectedDataSource.setCreatedBy(webUserController.getLoggedUser());
+//            selectedDataSource.setName(file.getFileName());
+//            selectedDataSource.setFileName(file.getFileName());
+//            if (selectedDataSource.getId() == null) {
+//                getDataSourceFacade().create(selectedDataSource);
+//            } else {
+//                getDataSourceFacade().edit(selectedDataSource);
+//            }
+//        }
+//
+//        try {
+//
+//            File inputWorkbook;
+//            Workbook w;
+//            Cell cell;
+//            InputStream in;
+//
+//            try {
+//
+//                in = file.getInputstream();
+//                File f;
+//                f = new File(Calendar.getInstance().getTimeInMillis() + file.getFileName());
+//                FileOutputStream out = new FileOutputStream(f);
+//                int read = 0;
+//                byte[] bytes = new byte[1024];
+//                while ((read = in.read(bytes)) != -1) {
+//                    out.write(bytes, 0, read);
+//                }
+//                in.close();
+//                out.flush();
+//                out.close();
+//
+//                inputWorkbook = new File(f.getAbsolutePath());
+//
+//                writeFileToDataSource(f, selectedDataSource);
+//                getDataSourceFacade().edit(selectedDataSource);
+//
+//                JsfUtil.addSuccessMessage("Excel File Opened");
+//                w = Workbook.getWorkbook(inputWorkbook);
+//                Sheet sheet = w.getSheet(0);
+//
+//                if (dataStartRow == null) {
+//                    dataStartRow = 1;
+//                }
+//                if (dataStartColumn == null) {
+//                    dataStartColumn = 0;
+//                }
+//                if (dataEndRow == null) {
+//                    dataEndRow = sheet.getRows() - 1;
+//                }
+//                if (dataEndColumn == null) {
+//                    dataEndColumn = sheet.getColumns() - 1;
+//                }
+//
+//                if (dataHeaderRow == null) {
+//                    dataHeaderRow = 0;
+//                }
+//
+//                selectedDataSource.setDataStartColumn(dataStartColumn);
+//                selectedDataSource.setDataEndColumn(dataEndColumn);
+//                selectedDataSource.setDataStartRow(dataStartRow);
+//                selectedDataSource.setDataEndRow(dataEndRow);
+//                selectedDataSource.setDataHeaderRow(dataHeaderRow);
+//
+//                getDataSourceFacade().edit(selectedDataSource);
+//
+//                for (int myCol = dataStartColumn; myCol < (dataEndColumn + 1); myCol++) {
+//                    cell = sheet.getCell(myCol, dataHeaderRow);
+//
+//                    DataColumn col = new DataColumn();
+//                    col.setOrderNo(myCol - dataStartColumn);
+//                    col.setDataSource(selectedDataSource);
+//                    col.setCreatedAt(new Date());
+//                    col.setCreatedBy(webUserController.getLoggedUser());
+//                    col.setName(cell.getContents());
+//                    getDataColumnFacade().create(col);
+//
+//                    mergingCount++;
+//                    mergingMessage = "Creating Columns - " + mergingCount;
+//
+//                    System.out.println("mergingMessage = " + mergingMessage);
+//
+//                }
+//
+//                mergingCount = 0l;
+//
+//                JsfUtil.addSuccessMessage("Succesful. All the data in Excel File Impoted to the database");
+//
+//                fillDataForSelectedDatasource();
+//
+//                mergingMessage = "Updating Master columns for Project";
+//                System.out.println("mergingMessage = " + mergingMessage);
+//                updateProjectColumns();
+//
+//                mergingMessage = "FIlling Master columns for Project";
+//                System.out.println("mergingMessage = " + mergingMessage);
+//                fillMasterDataColumnsOfSelectedProject();
+//
+//                mergingMessage = "Resetting file date";
+//                System.out.println("mergingMessage = " + mergingMessage);
+//                resetUploadFileDate();
+//
+//                mergingMessage = "Finishing";
+//                System.out.println("mergingMessage = " + mergingMessage);
+//                return toViewSelectedDatasourceWithoutFillingData();
+//
+//            } catch (IOException ex) {
+//                JsfUtil.addErrorMessage(ex.getMessage());
+//                return "";
+//            } catch (BiffException e) {
+//                JsfUtil.addErrorMessage(e.getMessage());
+//                return "";
+//            }
+//        } catch (Exception e) {
+//            return "";
+//        }
+        return "";
     }
 
     public void resetUploadFileDate() {
@@ -952,36 +947,29 @@ public class DataMergeController implements Serializable {
 
     public StreamedContent getDownloafFile() {
         return downloafFile;
-    }
+    
 
-    public List<DataSource> getSelectedDataSourcesOfSelectedProject() {
-        if (selectedDataSourcesOfSelectedProject == null) {
-            selectedDataSourcesOfSelectedProject = new ArrayList<>();
-        }
-        return selectedDataSourcesOfSelectedProject;
-    }
 
-    public void setSelectedDataSourcesOfSelectedProject(List<DataSource> selectedDataSourcesOfSelectedProject) {
-        this.selectedDataSourcesOfSelectedProject = selectedDataSourcesOfSelectedProject;
-    }
+
+}
 
     static public class ColumnModel implements Serializable {
 
-        private String header;
-        private String property;
+    private String header;
+    private String property;
 
-        public ColumnModel(String header, String property) {
-            this.header = header;
-            this.property = property;
-        }
-
-        public String getHeader() {
-            return header;
-        }
-
-        public String getProperty() {
-            return property;
-        }
+    public ColumnModel(String header, String property) {
+        this.header = header;
+        this.property = property;
     }
+
+    public String getHeader() {
+        return header;
+    }
+
+    public String getProperty() {
+        return property;
+    }
+}
 
 }

@@ -63,17 +63,20 @@
                             <p:tab title="Files" >
                                 <p:dataTable value="#{dataMergeController.dataSourcesOfSelectedProject}" 
                                              var="ds" id="tbl" reflow="true"
-                                             rowKey="#{ds.id}" selection="#{dataMergeController.selectedDataSourcesOfSelectedProject}"
+                                             rowKey="#{ds.id}"
                                              rowIndexVar="n">
                                     <f:facet name="header" >
                                         <p:outputLabel value="#{dataMergeController.selectedProject.name}" ></p:outputLabel>
                                     </f:facet>
-                                    <p:column selectionMode="multiple" ></p:column>
                                     <p:column headerText="No" width="50">
                                         <p:outputLabel value="#{n+1}" ></p:outputLabel>
                                     </p:column>
                                     <p:column headerText="File Name" >
                                         <p:outputLabel value="#{ds.name}"  >
+                                        </p:outputLabel>
+                                    </p:column>
+                                    <p:column headerText="Selected" >
+                                        <p:outputLabel value="#{ds.selected?'Yes':'No'}"  >
                                         </p:outputLabel>
                                     </p:column>
                                     <p:column headerText="Uploaded At" >
@@ -86,6 +89,13 @@
                                         </p:outputLabel>
                                     </p:column>
                                     <p:column headerText="Actions">
+
+                                        <p:commandLink id="btnSelect" process="@this" update="tbl"
+                                                       action="#{dataMergeController.toToggleSelectionOfDatasource()}" >
+                                             <p:outputLabel value="#{ds.selected?'Deselect':'Select'}"  >
+                                        </p:outputLabel>
+                                            <f:setPropertyActionListener value="#{ds}" target="#{dataMergeController.selectedDataSource}" ></f:setPropertyActionListener>
+                                        </p:commandLink>
                                         <p:spacer height="1" width="10" ></p:spacer>
                                         <p:commandLink value="View" ajax="false" action="#{dataMergeController.toViewSelectedDatasource()}" >
                                             <f:setPropertyActionListener value="#{ds}" target="#{dataMergeController.selectedDataSource}" ></f:setPropertyActionListener>
