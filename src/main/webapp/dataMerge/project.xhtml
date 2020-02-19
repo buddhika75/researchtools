@@ -68,11 +68,11 @@
                                     <f:facet name="header" >
                                         <p:outputLabel value="#{dataMergeController.selectedProject.name}" ></p:outputLabel>
                                     </f:facet>
-                                    <p:column selectionMode="multiple" ></p:column>
+                                    <p:column selectionMode="multiple"  width="50"></p:column>
                                     <p:column headerText="No" width="50">
                                         <p:outputLabel value="#{n+1}" ></p:outputLabel>
                                     </p:column>
-                                    <p:column headerText="File Name" >
+                                    <p:column headerText="File Name" sortBy="#{ds.name}" filterBy="#{ds.name}" filterMatchMode="contains" >
                                         <p:outputLabel value="#{ds.name}"  >
                                         </p:outputLabel>
                                     </p:column>
